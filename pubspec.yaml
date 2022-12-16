@@ -1,0 +1,29 @@
+name: retrokit
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=2.18.5 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.6.5
+  flutter_bluetooth_serial: 0.4.0
+  google_fonts: 3.0.1
+  percent_indicator: 4.2.2
+  spring: 2.0.2
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: ^2.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - assets/Retrokit Vector.png
+    - assets/Retrokit Vector logo.png
+
+  uses-material-design: true
+
