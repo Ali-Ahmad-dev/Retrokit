@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -13,6 +13,24 @@ class blue_connection extends StatefulWidget {
 }
 
 class _blue_connectionState extends State<blue_connection> {
+  Future<void> _discovery() async {
+    print('Devices are scanned');
+    final blueInstance = await FlutterBlue.instance;
+    setState(() {
+      final connected = blueInstance.connectedDevices;
+      print(connected);
+      connected.asStream().listen((event) {
+        event.forEach((element) {
+          print(element.name);
+        });
+      });
+    });
+  }
+
+  flutter_ble(BluetoothCharacteristic characteristic) {
+    var char = characteristic.read();
+  }
+
   StreamSubscription<BluetoothDiscoveryResult>? _streamSubscription;
   List<BluetoothDiscoveryResult> results =
       List<BluetoothDiscoveryResult>.empty(growable: true);
@@ -36,7 +54,7 @@ class _blue_connectionState extends State<blue_connection> {
     final bondedDevices =
         await FlutterBluetoothSerial.instance.getBondedDevices();
     final dev = bondedDevices.where((element) => element.isConnected);
-    print('=============Connected Device===============');
+
     print(dev.first.name);
   }
 
@@ -44,8 +62,8 @@ class _blue_connectionState extends State<blue_connection> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _startDiscovery();
+    _discovery();
+    // _startDiscovery();
   }
 
   @override
@@ -53,15 +71,14 @@ class _blue_connectionState extends State<blue_connection> {
     return Scaffold(
       body: Container(
         child: ListView.builder(itemBuilder: (BuildContext, index) {
-          BluetoothDiscoveryResult result = results[index];
-          final device = result.device;
-          final name = device.name;
-          final address = device.type;
+          // BluetoothDiscoveryResult result = results[index];
+          // final device = result.device;
+          // final name = device.name;
+          // final address = device.type;
           return Card(
             child: Column(
               children: [
-                Text('${name}'),
-                Text('${address}'),
+                //  Text('$'),
               ],
             ),
           );

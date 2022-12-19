@@ -12,6 +12,7 @@ dependencies:
   google_fonts: 3.0.1
   percent_indicator: 4.2.2
   spring: 2.0.2
+  flutter_blue: 0.8.0
   flutter: 
     sdk: flutter
 
@@ -24,6 +25,5 @@ flutter:
   assets: 
     - assets/Retrokit Vector.png
     - assets/Retrokit Vector logo.png
-
   uses-material-design: true
 
