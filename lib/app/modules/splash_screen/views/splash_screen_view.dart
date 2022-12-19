@@ -14,7 +14,9 @@ class SplashScreenView extends StatefulWidget {
 
 class _SplashScreenViewState extends State<SplashScreenView> {
   final SpringController springController =
-      SpringController(initialAnim: Motion.reverse);
+      SpringController(initialAnim: Motion.play);
+  final SpringController _controller =
+      SpringController(initialAnim: Motion.play);
 
   @override
   Widget build(BuildContext context) {
@@ -24,34 +26,51 @@ class _SplashScreenViewState extends State<SplashScreenView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 150),
-              child: SizedBox(
-                width: 230,
-                child: Image.asset(
-                  'assets/Retrokit Vector logo.png',
+            Container(
+              padding: EdgeInsets.only(top: 30),
+              child: Align(
+                alignment: Alignment.center,
+                child: Spring.slide(
+                  springController: springController,
+                  slideType: SlideType.slide_in_right,
+                  delay: Duration(milliseconds: 0),
+                  animDuration: Duration(milliseconds: 2000),
+                  curve: Curves.linear,
+                  withFade: false,
+                  extend: 200,
+                  animStatus: (AnimStatus status) {
+                    if (status == AnimStatus.dismissed) {
+                      // Get.to(() => MonitorView(), binding: MonitorBinding());
+                    }
+                  },
+                  child: Container(
+                      width: 220,
+                      child: Image.asset(
+                        'assets/Retrokit Vector logo.png',
+                        color: Colors.black,
+                      )),
                 ),
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 200),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Spring.slide(
-                  springController: springController,
-                  slideType: SlideType.slide_in_right,
-                  delay: Duration(milliseconds: 3000),
-                  animDuration: Duration(milliseconds: 3000),
+                  springController: _controller,
+                  slideType: SlideType.slide_in_left,
+                  delay: Duration(milliseconds: 0),
+                  animDuration: Duration(milliseconds: 2000),
                   curve: Curves.linear,
-                  extend: 200,
                   withFade: false,
+                  extend: -200,
                   animStatus: (AnimStatus status) {
                     if (status == AnimStatus.dismissed) {
-                      Get.to(() => MonitorView(), binding: MonitorBinding());
+                      // Get.to(() => MonitorView(), binding: MonitorBinding());
                     }
                   },
                   child: Container(
-                      width: 250,
+                      width: 220,
                       child: Image.asset(
                         'assets/Retrokit Vector.png',
                         color: Colors.black,
