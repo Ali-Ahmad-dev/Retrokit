@@ -8,11 +8,15 @@ environment:
 dependencies: 
   cupertino_icons: ^1.0.2
   get: 4.6.5
-  flutter_bluetooth_serial: 0.4.0
+ 
   google_fonts: 3.0.1
-  percent_indicator: 4.2.2
   spring: 2.0.2
   flutter_blue: 0.8.0
+  flutter_bounce: 1.1.0
+  getwidget: 3.0.1
+  flutter_reactive_ble: ^5.0.3
+  location_permissions: ^4.0.1
+  bluetooth_enable_fork: 0.1.6
   flutter: 
     sdk: flutter
 
@@ -23,7 +27,8 @@ dev_dependencies:
 
 flutter: 
   assets: 
-    - assets/Retrokit Vector.png
-    - assets/Retrokit Vector logo.png
+    - assets/images/
+    - assets/images/Retrokit Vector.png
+    - assets/images/Retrokit Vector logo.png
   uses-material-design: true
 

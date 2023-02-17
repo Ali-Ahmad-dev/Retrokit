@@ -3,9 +3,12 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   Routes._();
-  static const HOME = _Paths.HOME;
+  static const HOME = _Paths.SPLASH_SCREEN;
   static const MONITOR = _Paths.MONITOR;
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
+  static const SELECTION = _Paths.SELECTION;
+  static const SAMPLE = _Paths.SAMPLE;
+  static const BATTERY = _Paths.BATTERY;
 }
 
 abstract class _Paths {
@@ -13,4 +16,7 @@ abstract class _Paths {
   static const HOME = '/home';
   static const MONITOR = '/monitor';
   static const SPLASH_SCREEN = '/splash-screen';
+  static const SELECTION = '/selection';
+  static const SAMPLE = '/sample';
+  static const BATTERY = '/battery';
 }

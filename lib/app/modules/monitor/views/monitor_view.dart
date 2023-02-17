@@ -1,263 +1,450 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-
+import 'package:retrokit/app/helper/utility.dart';
+import 'package:retrokit/styles/colors.dart';
 import '../controllers/monitor_controller.dart';
 
 class MonitorView extends GetView<MonitorController> {
-  const MonitorView({Key? key}) : super(key: key);
+  MonitorView({Key? key}) : super(key: key);
+
+  final controller = Get.put(
+    MonitorController(),
+  );
+
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
-        backgroundColor:
-            controller.theme == false ? Colors.black : Colors.white,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(
-              () => IconButton(
-                  padding: EdgeInsets.only(bottom: 100),
-                  onPressed: () {
-                    controller.theme_change();
-                  },
-                  icon: Icon(
-                    Icons.light_mode_outlined,
-                    size: 50,
-                    color:
-                        controller.theme == true ? Colors.amber : Colors.white,
-                  )),
-            ),
-            SizedBox(
-              height: 270,
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+    final landscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    Text textWidget(String text, double fontSize, Color fontColor) {
+      return Text(text,
+          style: GoogleFonts.bebasNeue(
+            letterSpacing: 1.0,
+            fontSize: fontSize,
+            fontWeight: FontWeight.normal,
+            color: colors().text_color,
+          ));
+    }
+
+    Text headingTextWidget(String text, double fontSize, Color fontColor) {
+      return Text(text,
+          style: TextStyle(
+            letterSpacing: 1.0,
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            color: colors().text_color,
+          ));
+    }
+
+    List<String> headings = const [
+      'Max speed',
+      'Avg speed',
+      'Tot distance',
+      'Range'
+    ];
+
+    List<RxInt> values = [
+      controller.maxSpeed,
+      controller.avgSpeed,
+      controller.totalDistance,
+      controller.range,
+    ];
+    List<String> units = const ['km/h', 'km/h', 'km', 'km'];
+
+    containerWidget() {
+      List<Container> _containers = [];
+      for (var i = 0; i < headings.length; i++) {
+        _containers.add(Container(
+          width: landscape ? Get.width / 4 - 20 : Get.width / 2 - 15,
+          padding: EdgeInsets.only(
+            top: landscape ? 2 : 4,
+            bottom: landscape ? 4 : 6,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(width: 1.5, color: colors().text_color),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                  padding: EdgeInsets.only(top: 3, bottom: 5),
+                  child: headingTextWidget(
+                      headings[i], landscape ? 12 : 14, colors().text_color)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  textWidget(values[i].value.toString(), landscape ? 24 : 27,
+                      colors().text_color),
                   Padding(
-                    padding: const EdgeInsets.only(right: 0, left: 13),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    padding: EdgeInsets.only(left: 10),
+                    child: textWidget(
+                        units[i], landscape ? 11 : 14, colors().text_color),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ));
+      }
+      return landscape
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                _containers[0],
+                Padding(
+                  padding: const EdgeInsets.only(top: 3, bottom: 3),
+                  child: _containers[1],
+                ),
+                _containers[2],
+                Padding(
+                  padding: const EdgeInsets.only(top: 3, bottom: 3),
+                  child: _containers[3],
+                ),
+              ],
+            )
+          : Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
                       children: [
-                        Text(
-                          'L',
-                          style: GoogleFonts.oswald(
-                              textStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 30,
-                                  letterSpacing: -3.0)),
-                        ),
+                        _containers[0],
                         Padding(
-                          padding: const EdgeInsets.only(top: 15, bottom: 15),
-                          child: Text(
-                            'M',
-                            style: GoogleFonts.oswald(
-                                textStyle: TextStyle(
-                                    color: controller.theme == false
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontSize: 30,
-                                    letterSpacing: -3.0)),
-                          ),
-                        ),
-                        Text(
-                          'H',
-                          style: GoogleFonts.oswald(
-                              textStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 30,
-                                  letterSpacing: -3.0)),
+                          padding: const EdgeInsets.all(8.0),
+                          child: _containers[1],
                         ),
                       ],
                     ),
-                  ),
-                  //
-                  Center(
-                    child: CircularPercentIndicator(
-                      radius: 135.0,
-                      lineWidth: 11.0,
-                      percent: 0.80,
-                      circularStrokeCap: CircularStrokeCap.round,
-                      center: Center(
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Center(
-                              child: Icon(
-                                Icons.electric_bolt,
-                                color: controller.theme == false
-                                    ? Colors.grey.shade800
-                                    : Colors.grey.shade400,
-                                size: 230,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 20, left: 0, top: 5),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            height: 36,
-                                            width: 27,
-                                            decoration: BoxDecoration(
-                                              color: Colors.green,
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(40.0),
-                                                topLeft: Radius.circular(40.0),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 36,
-                                            width: 27,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade700,
-                                              borderRadius: BorderRadius.only(
-                                                  bottomRight:
-                                                      Radius.circular(40.0),
-                                                  bottomLeft:
-                                                      Radius.circular(40.0)),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Center(
-                                      child: SizedBox(
-                                        height: 145,
-                                        width: 94,
-                                        child: FittedBox(
-                                          fit: BoxFit.fill,
-                                          child: Text(
-                                            '160',
-                                            style: GoogleFonts.oswald(
-                                                textStyle: TextStyle(
-                                                    color: controller.theme ==
-                                                            false
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    fontSize: 70,
-                                                    fontWeight: FontWeight.w400,
-                                                    letterSpacing: -6.0)),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 7, right: 5),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            'KM',
-                                            style: GoogleFonts.oswald(
-                                                textStyle: TextStyle(
-                                                    color: controller.theme ==
-                                                            false
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    fontSize: 30,
-                                                    letterSpacing: -3.0)),
-                                          ),
-                                          Text(
-                                            '/',
-                                            style: GoogleFonts.oswald(
-                                                textStyle: TextStyle(
-                                                    color: controller.theme ==
-                                                            false
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    fontSize: 40,
-                                                    letterSpacing: -3.0)),
-                                          ),
-                                          Text(
-                                            'h',
-                                            style: GoogleFonts.oswald(
-                                                textStyle: TextStyle(
-                                                    color: controller.theme ==
-                                                            false
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    fontSize: 30,
-                                                    letterSpacing: -3.0)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 20,
-                              ),
+                    Row(
+                      children: [
+                        _containers[2],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, right: 8),
+                          child: _containers[3],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+    }
+
+    return Scaffold(
+      backgroundColor: colors().backGround,
+      body: Padding(
+        padding: landscape
+            ? EdgeInsets.only(left: 10, right: 10, top: 10)
+            : EdgeInsets.all(0),
+        child: SafeArea(
+          child: Flex(
+            direction: landscape ? Axis.horizontal : Axis.vertical,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: Obx(() => Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: controller.connected.value == false
+                          ? ElevatedButton(
+                              onPressed: () {
+                                // if (controller.blueON == false) {
+                                //   controller.enableBT();
+                                // } else if (controller.connected.value ==
+                                //         false &&
+                                //     controller.blueON == true) {
+                                controller.onConnectDevice(0);
+                                // }
+                              },
                               child: Text(
-                                ' 90%',
-                                style: GoogleFonts.oswald(
-                                    textStyle: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 27,
-                                        fontWeight: FontWeight.w400,
-                                        letterSpacing: -2.5)),
+                                'Connect',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    decoration: TextDecoration.none),
                               ),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                                backgroundColor: colors.green,
+                              ),
+                            )
+                          : SizedBox(
+                              height: 0,
                             ),
+                    )),
+              ),
+              Flexible(flex: 0, child: Obx(() => containerWidget())),
+              Flexible(
+                flex: 1,
+                child: Stack(alignment: Alignment.center, children: [
+                  Obx(() => GFProgressBar(
+                        percentage: controller.speedInternal.value / 100,
+                        progressHeadType: GFProgressHeadType.circular,
+                        radius: landscape ? Get.height - 75 : Get.width - 50,
+                        circleWidth: 11,
+                        type: GFProgressType.circular,
+                        backgroundColor: Colors.grey,
+                        progressBarColor: colors.green,
+                      )),
+                  Image.asset(
+                    'assets/images/FulmineIcon-e.png',
+                    height: 220,
+                    width: 120,
+                    color: colors().grey,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: landscape ? Get.height / 4 - 20 : 45,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Obx(() => RotatedBox(
+                                  quarterTurns: -1,
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 20),
+                                    width: 45,
+                                    height: 30,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(20),
+                                          bottomRight: Radius.circular(20)),
+                                      child: LinearProgressIndicator(
+                                        value: controller.current_level.value *
+                                            1.25 /
+                                            100,
+                                        valueColor: AlwaysStoppedAnimation<
+                                                Color>(
+                                            Color.fromARGB(255, 28, 197, 249)),
+                                        backgroundColor: colors().grey,
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                            Obx(() => RotatedBox(
+                                  quarterTurns: -3,
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 20),
+                                    width: 45,
+                                    height: 30,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(20),
+                                          bottomRight: Radius.circular(20)),
+                                      child: LinearProgressIndicator(
+                                        value: controller
+                                                .current_level.value.isNegative
+                                            ? controller.current_level.value
+                                                    .abs() *
+                                                2.5 /
+                                                100
+                                            : 0,
+                                        valueColor: AlwaysStoppedAnimation<
+                                                Color>(
+                                            Color.fromARGB(255, 5, 183, 23)),
+                                        backgroundColor: colors().grey,
+                                      ),
+                                    ),
+                                  ),
+                                )),
                           ],
                         ),
                       ),
-                      progressColor: Colors.green,
-                    ),
+                      Obx(() => Padding(
+                            padding: EdgeInsets.only(right: landscape ? 0 : 10),
+                            child: SizedBox(
+                              height: landscape ? 230 : 260,
+                              width: landscape
+                                  ? controller.speedInternal.value <= 9
+                                      ? 45
+                                      : 90
+                                  : controller.speedInternal.value <= 9
+                                      ? 53
+                                      : 106,
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: Text(
+                                  controller.tier1 == true
+                                      ? '${controller.speedInternal.value * 10}'
+                                      : controller.tier2 == true
+                                          ? '${controller.speedInternal.value * 20}'
+                                          : '${controller.speedInternal.value * 30}',
+                                  style: GoogleFonts.bebasNeue(
+                                    letterSpacing: -3.0,
+                                    fontSize: 160,
+                                    fontWeight: FontWeight.normal,
+                                    color: colors().text_color,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: landscape ? Get.height / 4 : 55),
+                        child: SizedBox(
+                          height: 45,
+                          width: 55,
+                          child: FittedBox(
+                            fit: BoxFit.fill,
+                            child: Text(
+                              'Km/h',
+                              style: TextStyle(
+                                letterSpacing: 0.0,
+                                fontFamily: 'Graphik',
+                                // fontSize: 29,
+                                fontWeight: FontWeight.w600,
+                                color: colors().text_color,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 20,
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                right: 17,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    '8.76 ',
-                    style: GoogleFonts.oswald(
-                        textStyle: TextStyle(
-                            color: controller.theme == false
-                                ? Colors.white
-                                : Colors.black,
-                            fontSize: 33,
-                            letterSpacing: -3.0)),
-                  ),
-                  Text(
-                    'Km ',
-                    style: GoogleFonts.oswald(
-                        textStyle: TextStyle(
-                            color: controller.theme == false
-                                ? Colors.white
-                                : Colors.black,
+                  Padding(
+                    padding:
+                        EdgeInsets.only(top: landscape ? 220 : 220, left: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Obx(() => Text(
+                              controller.percentage_internal.value.toString(),
+                              style: GoogleFonts.bebasNeue(
+                                letterSpacing: -1.0,
+                                fontSize: 35,
+                                fontWeight: FontWeight.normal,
+                                color: colors.green,
+                              ),
+                            )),
+                        Text(
+                          '%',
+                          style: GoogleFonts.bebasNeue(
+                            letterSpacing: -1.0,
                             fontSize: 25,
-                            letterSpacing: -3.0)),
-                  ),
-                ],
+                            fontWeight: FontWeight.normal,
+                            color: colors.green,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ]),
               ),
-            ),
-            SizedBox(),
-          ],
+              Obx(() => Flexible(
+                    flex: 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: Flex(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        direction: landscape ? Axis.vertical : Axis.horizontal,
+                        children: [
+                          Image.asset(
+                            'assets/images/retrokit_golden.png',
+                            width: 100,
+                            color: Color.fromARGB(
+                              255,
+                              242,
+                              201,
+                              25,
+                            ),
+                          ),
+                          Flex(
+                            direction: Axis.vertical,
+                            children: [
+                              InkWell(
+                                splashFactory: NoSplash.splashFactory,
+                                splashColor: Colors.transparent,
+                                onTap: () {},
+                                child: Container(
+                                  width: 130,
+                                  padding: EdgeInsets.only(
+                                      top: 5, bottom: 5, left: 20, right: 20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    border: Border.all(
+                                        width: 2,
+                                        color: controller.eco.value == true
+                                            ? colors().text_color
+                                            : Colors.transparent),
+                                  ),
+                                  child: textWidget(
+                                      'ECO', 25, colors().text_color),
+                                ),
+                              ),
+                              InkWell(
+                                splashFactory: NoSplash.splashFactory,
+                                splashColor: Colors.transparent,
+                                onTap: () {},
+                                child: Container(
+                                  width: 130,
+                                  padding: EdgeInsets.only(
+                                      top: 5, bottom: 5, left: 20, right: 20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    border: Border.all(
+                                        width: 2,
+                                        color: controller.drive.value == true
+                                            ? colors().text_color
+                                            : Colors.transparent),
+                                  ),
+                                  child: textWidget(
+                                      'DRIVE', 25, colors().text_color),
+                                ),
+                              ),
+                              InkWell(
+                                splashFactory: NoSplash.splashFactory,
+                                splashColor: Colors.transparent,
+                                onTap: () {},
+                                child: Container(
+                                  width: 130,
+                                  padding: EdgeInsets.only(
+                                      top: 5, bottom: 5, left: 20, right: 20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    border: Border.all(
+                                        width: 2,
+                                        color: controller.sport.value == true
+                                            ? colors().text_color
+                                            : Colors.transparent),
+                                  ),
+                                  child: textWidget(
+                                      'Sport', 25, colors().text_color),
+                                ),
+                              ),
+                            ],
+                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: Icon(
+                              Icons.light_mode_outlined,
+                              size: MediaQuery.of(context).orientation ==
+                                      Orientation.landscape
+                                  ? 30
+                                  : 40,
+                              color: controller.theme == true
+                                  ? Colors.amber
+                                  : Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+            ],
+          ),
         ),
       ),
     );
