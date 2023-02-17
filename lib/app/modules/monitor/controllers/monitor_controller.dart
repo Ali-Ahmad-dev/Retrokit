@@ -286,12 +286,12 @@ class MonitorController extends GetxController {
       _scanning = true;
 
       _scanStream = flutterReactiveBle
-          .scanForDevices(withServices: [_UART_UUID]).listen((device) async {
+          .scanForDevices(withServices: [_UART_UUID]).listen((device) {
         if (foundBleUARTDevices.every((element) => element.id != device.id)) {
           foundBleUARTDevices.add(device);
           print(device.name);
 
-          // selectDevices();
+          selectDevices();
           _stopScan();
         }
       }, onError: (Object error) {
@@ -303,7 +303,7 @@ class MonitorController extends GetxController {
   onConnectDevice(int index) {
     _currentConnectionStream = flutterReactiveBle.connectToAdvertisingDevice(
       id: foundBleUARTDevices[index].id,
-      prescanDuration: Duration(seconds: 2),
+      prescanDuration: Duration(seconds: 1),
       withServices: [
         _UART_UUID,
         _CHARACTERISTIC_UUID_1,

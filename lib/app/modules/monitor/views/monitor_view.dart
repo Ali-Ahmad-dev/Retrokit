@@ -427,7 +427,9 @@ class MonitorView extends GetView<MonitorController> {
                             ],
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              controller.startScan();
+                            },
                             child: Icon(
                               Icons.light_mode_outlined,
                               size: MediaQuery.of(context).orientation ==
