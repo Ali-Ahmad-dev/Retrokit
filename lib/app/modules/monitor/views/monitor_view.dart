@@ -148,40 +148,45 @@ class MonitorView extends GetView<MonitorController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Obx(() => Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: controller.connected.value == false
-                          ? ElevatedButton(
-                              onPressed: () {
-                                // if (controller.blueON == false) {
-                                //   controller.enableBT();
-                                // } else if (controller.connected.value ==
-                                //         false &&
-                                //     controller.blueON == true) {
-                                controller.onConnectDevice(0);
-                                // }
-                              },
-                              child: Text(
-                                'Connect',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    decoration: TextDecoration.none),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)),
-                                backgroundColor: colors.green,
-                              ),
-                            )
-                          : SizedBox(
-                              height: 0,
-                            ),
-                    )),
-              ),
+              landscape == false
+                  ? Align(
+                      alignment: landscape
+                          ? Alignment.bottomRight
+                          : Alignment.topRight,
+                      child: Obx(() => Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: controller.connected.value == false
+                                ? ElevatedButton(
+                                    onPressed: () {
+                                      if (controller.blueON == false) {
+                                        controller.enableBT();
+                                      } else if (controller.connected.value ==
+                                              false &&
+                                          controller.blueON == true) {
+                                        controller.startScan();
+                                      }
+                                    },
+                                    child: Text(
+                                      'Connect',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          decoration: TextDecoration.none),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      backgroundColor: colors.green,
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: 0,
+                                  ),
+                          )),
+                    )
+                  : Text(''),
               Flexible(flex: 0, child: Obx(() => containerWidget())),
               Flexible(
                 flex: 1,
@@ -426,20 +431,75 @@ class MonitorView extends GetView<MonitorController> {
                               ),
                             ],
                           ),
-                          InkWell(
-                            onTap: () {
-                              controller.startScan();
-                            },
-                            child: Icon(
-                              Icons.light_mode_outlined,
-                              size: MediaQuery.of(context).orientation ==
-                                      Orientation.landscape
-                                  ? 30
-                                  : 40,
-                              color: controller.theme == true
-                                  ? Colors.amber
-                                  : Colors.white,
-                            ),
+                          Row(
+                            children: [
+                              landscape == true
+                                  ? Align(
+                                      alignment: landscape
+                                          ? Alignment.bottomRight
+                                          : Alignment.topRight,
+                                      child: Obx(() => Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 20),
+                                            child: controller.connected.value ==
+                                                    false
+                                                ? ElevatedButton(
+                                                    onPressed: () {
+                                                      if (controller.blueON ==
+                                                          false) {
+                                                        controller.enableBT();
+                                                      } else if (controller
+                                                                  .connected
+                                                                  .value ==
+                                                              false &&
+                                                          controller.blueON ==
+                                                              true) {
+                                                        controller.startScan();
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                      'Connect',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .none),
+                                                    ),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30)),
+                                                      backgroundColor:
+                                                          colors.green,
+                                                    ),
+                                                  )
+                                                : SizedBox(
+                                                    height: 0,
+                                                  ),
+                                          )),
+                                    )
+                                  : Text(''),
+                              InkWell(
+                                onTap: () {},
+                                child: Icon(
+                                  Icons.light_mode_outlined,
+                                  size: MediaQuery.of(context).orientation ==
+                                          Orientation.landscape
+                                      ? 30
+                                      : 40,
+                                  color: controller.theme == true
+                                      ? Colors.amber
+                                      : Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -452,3 +512,38 @@ class MonitorView extends GetView<MonitorController> {
     );
   }
 }
+    // Align(
+    //             alignment:
+    //                 landscape ? Alignment.bottomRight : Alignment.topRight,
+    //             child: Obx(() => Padding(
+    //                   padding: const EdgeInsets.only(right: 20),
+    //                   child: controller.connected.value == false
+    //                       ? ElevatedButton(
+    //                           onPressed: () {
+    //                             if (controller.blueON == false) {
+    //                               controller.enableBT();
+    //                             } else if (controller.connected.value ==
+    //                                     false &&
+    //                                 controller.blueON == true) {
+    //                               controller.startScan();
+    //                             }
+    //                           },
+    //                           child: Text(
+    //                             'Connect',
+    //                             style: TextStyle(
+    //                                 color: Colors.white,
+    //                                 fontWeight: FontWeight.bold,
+    //                                 fontSize: 14,
+    //                                 decoration: TextDecoration.none),
+    //                           ),
+    //                           style: ElevatedButton.styleFrom(
+    //                             shape: RoundedRectangleBorder(
+    //                                 borderRadius: BorderRadius.circular(30)),
+    //                             backgroundColor: colors.green,
+    //                           ),
+    //                         )
+    //                       : SizedBox(
+    //                           height: 0,
+    //                         ),
+    //                 )),
+    //           ),

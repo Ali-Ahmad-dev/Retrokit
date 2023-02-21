@@ -10,31 +10,38 @@ class utility {
 
   disconnected_snackbar() => Get.snackbar('', '',
       padding: EdgeInsets.only(top: 12),
-      backgroundColor: Color.fromARGB(255, 243, 37, 22),
-      icon: Padding(
-        padding: EdgeInsets.only(left: Get.width - 100),
-        child: Icon(
-          Icons.bluetooth_disabled,
-          color: Colors.white,
-        ),
-      ),
+      margin: EdgeInsets.only(left: 50, right: 30),
       borderRadius: 200,
       duration: Duration(seconds: 3),
       messageText: Text(
         '',
         style: TextStyle(color: Colors.white, fontSize: 0),
       ),
-      titleText: Text(
-        'Bluetooth is turned off',
-        style: TextStyle(color: Colors.white, fontSize: 18),
+      titleText: Row(
+        children: [
+          Text(
+            textAlign: TextAlign.center,
+            '    Bluetooth is turned off',
+            style: TextStyle(
+                color: Color.fromARGB(255, 255, 12, 12),
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Icon(
+              Icons.bluetooth_disabled,
+              color: Colors.red,
+            ),
+          ),
+        ],
       ));
 
   connected_snackbar() => Get.snackbar('', '',
       padding: EdgeInsets.only(
-        top: 12,
+        top: 7,
       ),
       margin: EdgeInsets.only(left: 80, right: 80),
-      backgroundColor: Colors.green,
       borderRadius: 200,
       duration: Duration(seconds: 3),
       messageText: Text(
@@ -42,14 +49,18 @@ class utility {
         style: TextStyle(color: Colors.white, fontSize: 0),
       ),
       titleText: Text(
-        'Connected!',
+        'Connected',
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.white, fontSize: 20),
+        style: TextStyle(
+          color: Color.fromARGB(255, 85, 255, 28),
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ));
 
-  ble_disconnected_snackbar() => Get.snackbar('', '',
+  device_not_found_snackbar() => Get.snackbar('', '',
       padding: EdgeInsets.only(top: 12),
-      backgroundColor: Color.fromARGB(255, 243, 166, 22),
+      margin: EdgeInsets.only(left: 50, right: 50),
       borderRadius: 200,
       duration: Duration(seconds: 3),
       messageText: Text(
@@ -57,8 +68,29 @@ class utility {
         style: TextStyle(color: Colors.white, fontSize: 0),
       ),
       titleText: Text(
-        '   Device Disconnected!',
-        style: TextStyle(color: Colors.white, fontSize: 18),
+        textAlign: TextAlign.center,
+        '  No device found! ',
+        style: TextStyle(
+            color: Color.fromARGB(255, 255, 227, 12),
+            fontSize: 20,
+            fontWeight: FontWeight.bold),
+      ));
+  ble_disconnected_snackbar() => Get.snackbar('', '',
+      padding: EdgeInsets.only(top: 12),
+      margin: EdgeInsets.only(left: 50, right: 50),
+      borderRadius: 200,
+      duration: Duration(seconds: 3),
+      messageText: Text(
+        '',
+        style: TextStyle(color: Colors.white, fontSize: 0),
+      ),
+      titleText: Text(
+        textAlign: TextAlign.center,
+        '  Device Disconnected! ',
+        style: TextStyle(
+            color: Color.fromARGB(255, 255, 117, 12),
+            fontSize: 20,
+            fontWeight: FontWeight.bold),
       ));
 
   Text heading_selections(

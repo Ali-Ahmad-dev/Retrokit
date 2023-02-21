@@ -15,7 +15,7 @@ dependencies:
   flutter_bounce: 1.1.0
   getwidget: 3.0.1
   flutter_reactive_ble: ^5.0.3
-  location_permissions: ^4.0.1
+  nearby_connections: ^3.2.0
   bluetooth_enable_fork: 0.1.6
   flutter: 
     sdk: flutter

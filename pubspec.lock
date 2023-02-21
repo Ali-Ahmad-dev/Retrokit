@@ -179,13 +179,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  location_permissions:
-    dependency: "direct main"
-    description:
-      name: location_permissions
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.1"
   matcher:
     dependency: transitive
     description:
@@ -207,6 +200,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  nearby_connections:
+    dependency: "direct main"
+    description:
+      name: nearby_connections
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.0"
   path:
     dependency: transitive
     description:

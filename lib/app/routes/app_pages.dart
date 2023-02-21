@@ -4,8 +4,7 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/monitor/bindings/monitor_binding.dart';
 import '../modules/monitor/views/monitor_view.dart';
-import '../modules/sample/bindings/sample_binding.dart';
-import '../modules/sample/views/sample_view.dart';
+
 import '../modules/selection/bindings/selection_binding.dart';
 import '../modules/selection/views/selection_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
@@ -38,11 +37,6 @@ class AppPages {
       name: _Paths.SELECTION,
       page: () => const SelectionView(),
       binding: SelectionBinding(),
-    ),
-    GetPage(
-      name: _Paths.SAMPLE,
-      page: () => const SampleView(),
-      binding: SampleBinding(),
     ),
   ];
 }

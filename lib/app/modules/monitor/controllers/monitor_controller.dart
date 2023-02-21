@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
-import 'package:location_permissions/location_permissions.dart';
+import 'package:nearby_connections/nearby_connections.dart';
+
 import 'package:retrokit/app/helper/utility.dart';
 import 'package:retrokit/styles/colors.dart';
 
@@ -270,34 +271,37 @@ class MonitorController extends GetxController {
     _scanning = false;
   }
 
+  permission_internal() async {
+    await Nearby().askLocationPermission();
+    Nearby().askBluetoothPermission();
+  }
+
   void startScan() async {
-    bool goForIt = false;
+    if (connected == false && blueON == true) {
+      print('SCANNED CALL');
 
-    PermissionStatus permission;
-    if (Platform.isAndroid) {
-      permission = await LocationPermissions().requestPermissions();
-      if (permission == PermissionStatus.granted) goForIt = true;
-    } else if (Platform.isIOS) {
-      goForIt = true;
-    }
-
-    if (goForIt == true) {
       foundBleUARTDevices = [];
       _scanning = true;
 
-      _scanStream = flutterReactiveBle
-          .scanForDevices(withServices: [_UART_UUID]).listen((device) {
-        if (foundBleUARTDevices.every((element) => element.id != device.id)) {
-          foundBleUARTDevices.add(device);
-          print(device.name);
+      _scanStream = await flutterReactiveBle
+          .scanForDevices(withServices: [_UART_UUID]).listen(
+        (device) {
+          if (foundBleUARTDevices.every((element) => element.id != device.id)) {
+            foundBleUARTDevices.add(device);
 
-          selectDevices();
-          _stopScan();
-        }
-      }, onError: (Object error) {
-        _logTexts = "${_logTexts}ERROR while scanning:$error \n";
-      });
-    } else {}
+            selectDevices();
+            _stopScan();
+          }
+        },
+        onError: (Object error) {
+          _logTexts = "${_logTexts}ERROR while scanning:$error \n";
+        },
+      );
+    }
+    await Future.delayed(Duration(seconds: 2));
+    if (foundBleUARTDevices.length == 0) {
+      utility().device_not_found_snackbar();
+    }
   }
 
   onConnectDevice(int index) {
@@ -313,7 +317,6 @@ class MonitorController extends GetxController {
         _CHARACTERISTIC_UUID_5,
         _CHARACTERISTIC_UUID_6,
         _CHARACTERISTIC_UUID_7,
-        _CHARACTERISTIC_UUID_8,
         _CHARACTERISTIC_UUID_8,
         _CHARACTERISTIC_UUID_10,
         _CHARACTERISTIC_UUID_11,
@@ -400,7 +403,6 @@ class MonitorController extends GetxController {
                 serviceId: _UART_UUID,
                 characteristicId: _CHARACTERISTIC_UUID_14,
                 deviceId: event.deviceId);
-
             _qulaified_characteristic_16 = QualifiedCharacteristic(
                 serviceId: _UART_UUID,
                 characteristicId: _CHARACTERISTIC_UUID_16,
@@ -570,17 +572,10 @@ class MonitorController extends GetxController {
             connected.value = false;
             _logTexts = "${_logTexts}Disconnected from $id\n";
             print(_logTexts);
-
+            utility().ble_disconnected_snackbar();
             break;
           }
       }
-    });
-  }
-
-  void state_organizer() async {
-    var x = await flutterReactiveBle.connectedDeviceStream;
-    await x.listen((event) {
-      print(event.deviceId);
     });
   }
 
@@ -596,17 +591,17 @@ class MonitorController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    startScan();
-    print('====================');
-    // FlutterBlue.instance.state.listen((event) {
-    //   if (event.toString() == 'BluetoothState.on') {
-    //     blueON = true;
-    //     startScan();
-    //   } else if (event.toString() == 'BluetoothState.off') {
-    //     utility().ble_disconnected_snackbar();
-    //     enableBT();
-    //   }
-    // });
+    permission_internal();
+
+    FlutterBlue.instance.state.listen((event) {
+      if (event.toString() == 'BluetoothState.on') {
+        blueON = true;
+        startScan();
+      } else if (event.toString() == 'BluetoothState.off') {
+        utility().disconnected_snackbar();
+        enableBT();
+      }
+    });
   }
 
   Future<void> enableBT() async {
