@@ -56,7 +56,6 @@ class SelectionView extends GetView<SelectionController> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(SelectionController());
     List<String> iconsPath = [
       'assets/images/01.png',
       'assets/images/more1.png',

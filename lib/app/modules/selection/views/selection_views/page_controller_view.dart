@@ -175,11 +175,14 @@ class PageControllerView extends StatelessWidget {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: landscape ? 0 : 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         utility().body_selections_const(
-                            'mapping', colors().dark_grey),
+                            'Mapping', colors().dark_grey),
                       ],
                     ),
                   ],

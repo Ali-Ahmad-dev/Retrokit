@@ -150,4 +150,6 @@ class utility {
       child: text,
     );
   }
+
+  warnings_handler() {}
 }

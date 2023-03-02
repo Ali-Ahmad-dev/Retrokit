@@ -191,14 +191,23 @@ class MonitorView extends GetView<MonitorController> {
               Flexible(
                 flex: 1,
                 child: Stack(alignment: Alignment.center, children: [
-                  Obx(() => GFProgressBar(
-                        percentage: controller.speedInternal.value / 100,
-                        progressHeadType: GFProgressHeadType.circular,
-                        radius: landscape ? Get.height - 75 : Get.width - 50,
-                        circleWidth: 11,
-                        type: GFProgressType.circular,
-                        backgroundColor: Colors.grey,
-                        progressBarColor: colors.green,
+                  Obx(() => Transform.scale(
+                        scaleX:
+                            controller.current_level.value.isNegative ? -1 : 1,
+                        child: GFProgressBar(
+                          percentage: controller.current_level.value.isNegative
+                              ? controller.current_level.value.abs() * 2.5 / 100
+                              : controller.current_level.value * 1.25 / 100,
+                          progressHeadType: GFProgressHeadType.circular,
+                          radius: landscape ? Get.height - 75 : Get.width - 50,
+                          circleWidth: 11,
+                          type: GFProgressType.circular,
+                          backgroundColor: Colors.grey,
+                          progressBarColor:
+                              controller.current_level.value.isNegative
+                                  ? Colors.blue
+                                  : colors.green,
+                        ),
                       )),
                   Image.asset(
                     'assets/images/FulmineIcon-e.png',
@@ -206,146 +215,94 @@ class MonitorView extends GetView<MonitorController> {
                     width: 120,
                     color: colors().grey,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: landscape ? Get.height / 4 - 20 : 45,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Obx(() => RotatedBox(
-                                  quarterTurns: -1,
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 20),
-                                    width: 45,
-                                    height: 30,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(20),
-                                          bottomRight: Radius.circular(20)),
-                                      child: LinearProgressIndicator(
-                                        value: controller.current_level.value *
-                                            1.25 /
-                                            100,
-                                        valueColor: AlwaysStoppedAnimation<
-                                                Color>(
-                                            Color.fromARGB(255, 28, 197, 249)),
-                                        backgroundColor: colors().grey,
-                                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          child: Stack(alignment: Alignment.center, children: [
+                            Obx(
+                              () => RotatedBox(
+                                quarterTurns: -1,
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 20),
+                                  width: 58,
+                                  height: 37,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(20),
+                                        bottomRight: Radius.circular(20)),
+                                    child: LinearProgressIndicator(
+                                      value:
+                                          controller.percentage_internal.value /
+                                              100,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Color.fromARGB(255, 16, 232, 27)),
+                                      backgroundColor: colors().backGround,
                                     ),
-                                  ),
-                                )),
-                            Obx(() => RotatedBox(
-                                  quarterTurns: -3,
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 20),
-                                    width: 45,
-                                    height: 30,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(20),
-                                          bottomRight: Radius.circular(20)),
-                                      child: LinearProgressIndicator(
-                                        value: controller
-                                                .current_level.value.isNegative
-                                            ? controller.current_level.value
-                                                    .abs() *
-                                                2.5 /
-                                                100
-                                            : 0,
-                                        valueColor: AlwaysStoppedAnimation<
-                                                Color>(
-                                            Color.fromARGB(255, 5, 183, 23)),
-                                        backgroundColor: colors().grey,
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                          ],
-                        ),
-                      ),
-                      Obx(() => Padding(
-                            padding: EdgeInsets.only(right: landscape ? 0 : 10),
-                            child: SizedBox(
-                              height: landscape ? 230 : 260,
-                              width: landscape
-                                  ? controller.speedInternal.value <= 9
-                                      ? 45
-                                      : 90
-                                  : controller.speedInternal.value <= 9
-                                      ? 53
-                                      : 106,
-                              child: FittedBox(
-                                fit: BoxFit.fill,
-                                child: Text(
-                                  controller.tier1 == true
-                                      ? '${controller.speedInternal.value * 10}'
-                                      : controller.tier2 == true
-                                          ? '${controller.speedInternal.value * 20}'
-                                          : '${controller.speedInternal.value * 30}',
-                                  style: GoogleFonts.bebasNeue(
-                                    letterSpacing: -3.0,
-                                    fontSize: 160,
-                                    fontWeight: FontWeight.normal,
-                                    color: colors().text_color,
                                   ),
                                 ),
                               ),
                             ),
-                          )),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            right: landscape ? Get.height / 4 : 55),
-                        child: SizedBox(
-                          height: 45,
-                          width: 55,
-                          child: FittedBox(
-                            fit: BoxFit.fill,
-                            child: Text(
-                              'Km/h',
-                              style: TextStyle(
-                                letterSpacing: 0.0,
-                                fontFamily: 'Graphik',
-                                // fontSize: 29,
-                                fontWeight: FontWeight.w600,
-                                color: colors().text_color,
+                            Image.asset(
+                              'assets/images/battery-charging.png',
+                              width: 60,
+                              color: colors().text_color,
+                            ),
+                          ]),
+                        ),
+                        Obx(() => Padding(
+                              padding:
+                                  EdgeInsets.only(right: landscape ? 0 : 10),
+                              child: SizedBox(
+                                height: landscape ? 230 : 260,
+                                width: controller.speedInternal.value >= 0
+                                    ? 50
+                                    : controller.speedInternal.value >= 10
+                                        ? 100
+                                        : controller.speedInternal.value >= 100
+                                            ? 150
+                                            : 150,
+                                child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  child: Text(
+                                    '${controller.speedInternal.value * 20}',
+                                    style: GoogleFonts.bebasNeue(
+                                      letterSpacing: -3.0,
+                                      fontSize: 80,
+                                      fontWeight: FontWeight.normal,
+                                      color: colors().text_color,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              right: landscape ? Get.height / 4 : 55),
+                          child: SizedBox(
+                            height: 45,
+                            width: 55,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Text(
+                                'Km/h',
+                                style: TextStyle(
+                                  letterSpacing: 0.0,
+                                  fontFamily: 'Graphik',
+                                  // fontSize: 29,
+                                  fontWeight: FontWeight.w600,
+                                  color: colors().text_color,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.only(top: landscape ? 220 : 220, left: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Obx(() => Text(
-                              controller.percentage_internal.value.toString(),
-                              style: GoogleFonts.bebasNeue(
-                                letterSpacing: -1.0,
-                                fontSize: 35,
-                                fontWeight: FontWeight.normal,
-                                color: colors.green,
-                              ),
-                            )),
-                        Text(
-                          '%',
-                          style: GoogleFonts.bebasNeue(
-                            letterSpacing: -1.0,
-                            fontSize: 25,
-                            fontWeight: FontWeight.normal,
-                            color: colors.green,
-                          ),
-                        ),
                       ],
                     ),
-                  )
+                  ),
                 ]),
               ),
               Obx(() => Flexible(
