@@ -1,7 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:retrokit/app/helper/utility.dart';
 import 'package:retrokit/app/modules/monitor/controllers/monitor_controller.dart';
 
@@ -159,108 +158,38 @@ class PageWarningView extends StatelessWidget {
     },
   ].obs;
 
-  List<Container> con = [];
-
-  List warning_titles = [
-    'Controller Power Tube Fault',
-    'Controller Driving Power Fault',
-    'Controller Over Current Fault',
-    'Controller Over Voltage Protection',
-    'Controller Over Temperature Protection',
-    'Motor Phase Wire Fault',
-    'Motor Hall Fault',
-    'Motor Over Temperature protection',
-    'Controller Under-Voltage protection',
-    'Motor Stall Protection',
-    'Throttle Fault',
-    'Throttle not released when power-on',
-    'BMS Low Voltage',
-    'BMS Overcurrent Charge',
-    'BMS Over Current Discharge',
-    'BMS Over Temperature Discharge',
-    'BMS Under Temperature Discharge',
-    'BMS Cell Open',
-    'BMS Short Discharge',
-    'BMS Over Temperature Charge',
-    'BMS Under Temperature Charge',
-    'BMS Over Temperature Mosfet',
-    'BMS Temperature Sensor Error'
-  ];
-  List warning_codes = [
-    'P0001',
-    'P0002',
-    'P0003',
-    'P0004',
-    'P0005',
-    'P0006',
-    'P0007',
-    'P0008',
-    'P0009',
-    'P0010',
-    'P0011',
-    'P0012',
-    'P0013',
-    'P0014',
-    'P0015',
-    'P0016',
-    'P0017',
-    'P0018',
-    'P0019',
-    'P0020',
-    'P0021',
-    'P0022',
-    'P0023',
-  ];
-
-  final warnings = [
-    Get.find<MonitorController>().controller_power_tube_fault,
-    Get.find<MonitorController>().controller_driving_power_fault,
-    Get.find<MonitorController>().controller_over_current_fault,
-    Get.find<MonitorController>().controller_over_voltage_protection,
-    Get.find<MonitorController>().controller_over_temprature_protection,
-    Get.find<MonitorController>().motor_phase_wire_fault,
-    Get.find<MonitorController>().motor_hall_fault,
-    Get.find<MonitorController>().motor_over_temprature_protection,
-    Get.find<MonitorController>().controller_under_voltage_protection,
-    Get.find<MonitorController>().motor_stall_protection,
-    Get.find<MonitorController>().throttle_fault,
-    Get.find<MonitorController>().throttle_not_released,
-    Get.find<MonitorController>().bms_low_voltage,
-    Get.find<MonitorController>().bms_over_current_charge,
-    Get.find<MonitorController>().bms_over_current_discharge,
-    Get.find<MonitorController>().bms_over_temprature_discharge,
-    Get.find<MonitorController>().bms_under_temprature_discharge,
-    Get.find<MonitorController>().bms_cell_open,
-    Get.find<MonitorController>().bms_short_discharge,
-    Get.find<MonitorController>().bms_over_temprature_charge,
-    Get.find<MonitorController>().bms_under_temprature_charge,
-    Get.find<MonitorController>().bms_over_temprature_mosfet,
-    Get.find<MonitorController>().bms_temprature_sensor_error,
-  ];
-
   error_handler_containers(RxInt x, String title, String code, RxBool state) {
-    return state == true
+    return state.value == true
         ? Obx(() => Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  SizedBox(
-                    width: Get.width / 2,
-                    child: Text(title,
-                        style: GoogleFonts.bebasNeue(
-                          letterSpacing: 1.0,
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold,
-                          color: x == 1 ? Colors.red : Colors.white,
-                        )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: Get.width / 2,
+                        child: Text(title,
+                            style: TextStyle(
+                              letterSpacing: 1.0,
+                              fontSize: 23,
+                              fontFamily: 'BebasNeue',
+                              fontWeight: FontWeight.bold,
+                              color: x == 1 ? Colors.red : Colors.white,
+                            )),
+                      ),
+                      Text(code,
+                          style: TextStyle(
+                            letterSpacing: 1.0,
+                            fontFamily: 'BebasNeue',
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold,
+                            color: x == 1 ? Colors.red : Colors.white,
+                          )),
+                    ],
                   ),
-                  Text(code,
-                      style: GoogleFonts.bebasNeue(
-                        letterSpacing: 1.0,
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                        color: x == 1 ? Colors.red : Colors.white,
-                      )),
+                  Divider(
+                    color: Colors.white,
+                  ),
                 ],
               ),
             ))
@@ -269,9 +198,8 @@ class PageWarningView extends StatelessWidget {
           );
   }
 
-  List<Container> containers = [];
   sorting_function() {
-    warnings_data.sort((a, b) => a['value'].value.compareTo(b['value'].value));
+    warnings_data.sort((a, b) => b['value'].value.compareTo(a['value'].value));
   }
 
   late Stream<List<int>> warnings_stream;
@@ -288,54 +216,41 @@ class PageWarningView extends StatelessWidget {
       ),
       backgroundColor: colors().backGround,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  utility().heading_selections('  Warnning'),
-                  Image.asset(
-                    'assets/images/03.png',
-                    width: 130,
-                    height: 70,
-                    color: colors().text_color,
-                  ),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    utility().heading_selections('  Warning'),
+                    Image.asset(
+                      'assets/images/03.png',
+                      width: 130,
+                      height: 70,
+                      color: colors().text_color,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  Get.find<MonitorController>().change_value_true();
-                },
-                child: Text('FALSE')),
-            ElevatedButton(
-                onPressed: () {
-                  Get.find<MonitorController>().change_value_true();
-                },
-                child: Text('TRUE')),
-            ElevatedButton(
-                onPressed: () {
-                  for (var i = 0; i < warnings_data.length; i++) {
-                    print(warnings_data[i]['state']);
-                  }
-                  Get.find<MonitorController>().change_value_state();
-                },
-                child: Text('Show Values')),
-            Obx(() => SizedBox(
-                  height: 500,
-                  child: ListView.builder(
-                      itemCount: warnings_data.length,
-                      itemBuilder: (context, index) {
-                        return Obx(() => error_handler_containers(
-                            warnings_data[index]['value'],
-                            warnings_data[index]['title'],
-                            warnings_data[index]['code'],
-                            warnings_data[index]['state']));
-                      }),
-                ))
-          ],
+              SizedBox(
+                height: 550,
+                child: ListView.builder(
+                    itemCount: warnings_data.length,
+                    itemBuilder: (context, index) {
+                      Timer.periodic(
+                          Duration(seconds: 1), (timer) => sorting_function());
+                      return Obx(() => error_handler_containers(
+                          warnings_data[index]['value'],
+                          warnings_data[index]['title'],
+                          warnings_data[index]['code'],
+                          warnings_data[index]['state']));
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );

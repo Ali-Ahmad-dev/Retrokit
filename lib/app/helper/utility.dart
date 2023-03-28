@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../styles/colors.dart';
 import '../modules/monitor/controllers/monitor_controller.dart';
@@ -79,7 +78,7 @@ class utility {
       padding: EdgeInsets.only(top: 12),
       margin: EdgeInsets.only(left: 50, right: 50),
       borderRadius: 200,
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 2),
       messageText: Text(
         '',
         style: TextStyle(color: Colors.white, fontSize: 0),
@@ -97,10 +96,11 @@ class utility {
     String text,
   ) {
     return Text(text,
-        style: GoogleFonts.bebasNeue(
+        style: TextStyle(
           letterSpacing: 1.0,
           fontSize: 27,
           fontWeight: FontWeight.bold,
+          fontFamily: 'BebasNeue',
           color: colors().text_color,
         ));
   }
@@ -110,9 +110,10 @@ class utility {
     Color color,
   ) {
     return Text(text,
-        style: GoogleFonts.bebasNeue(
+        style: TextStyle(
             letterSpacing: 0.0,
             fontSize: 19,
+            fontFamily: 'BebasNeue',
             fontWeight: FontWeight.bold,
             color: color));
   }
@@ -122,7 +123,7 @@ class utility {
       max.value = val.value;
     }
     return Obx(() => Container(
-        width: 120,
+        width: 130,
         padding: EdgeInsets.only(top: 10, bottom: 10, right: 15, left: 15),
         decoration: BoxDecoration(
           color: colors.red,
@@ -130,9 +131,10 @@ class utility {
         ),
         child: Center(
           child: Text('Max  ${max.value.toString()} $symbol',
-              style: GoogleFonts.bebasNeue(
+              style: TextStyle(
                   letterSpacing: 0.0,
                   fontSize: 19,
+                  fontFamily: 'BebasNeue',
                   fontWeight: FontWeight.bold,
                   color: Colors.white)),
         )));
@@ -150,6 +152,4 @@ class utility {
       child: text,
     );
   }
-
-  warnings_handler() {}
 }

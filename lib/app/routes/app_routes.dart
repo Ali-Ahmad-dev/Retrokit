@@ -9,6 +9,9 @@ abstract class Routes {
   static const SELECTION = _Paths.SELECTION;
   static const SAMPLE = _Paths.SAMPLE;
   static const BATTERY = _Paths.BATTERY;
+  static const WARNING = _Paths.WARNING;
+  static const LOGIN = _Paths.LOGIN;
+  static const SIGNUP = _Paths.SIGNUP;
 }
 
 abstract class _Paths {
@@ -19,4 +22,7 @@ abstract class _Paths {
   static const SELECTION = '/selection';
   static const SAMPLE = '/sample';
   static const BATTERY = '/battery';
+  static const WARNING = '/warning';
+  static const LOGIN = '/login';
+  static const SIGNUP = '/signup';
 }

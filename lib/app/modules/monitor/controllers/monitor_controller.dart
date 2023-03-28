@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
 import 'package:nearby_connections/nearby_connections.dart';
+import 'package:retrokit/app/helper/local_storage_services.dart';
 
 import 'package:retrokit/app/helper/utility.dart';
 import 'package:retrokit/styles/colors.dart';
@@ -385,17 +387,7 @@ class MonitorController extends GetxController {
   //WHEN DATA IS RECIEVED FROM ESP
 
   void onReceived_SpeedInternal(List<int> data) {
-    int x = int.parse("${String.fromCharCodes(data)}");
-    if (tier1 == true) {
-      speedInternal.value = x * 10;
-    }
-    if (tier2 == true) {
-      speedInternal.value = x * 20;
-    }
-    if (tier3 == true) {
-      speedInternal.value = x * 30;
-    }
-    print(speedInternal.value);
+    speedInternal.value = int.parse("${String.fromCharCodes(data)}");
   }
 
   void onReceived_maxSpeed(List<int> data) {
@@ -420,7 +412,7 @@ class MonitorController extends GetxController {
 
   void onReceived_current_level(List<int> data) {
     current_level.value = int.parse("${String.fromCharCodes(data)}") - 40;
-    print(int.parse("${String.fromCharCodes(data)}"));
+    print(current_level.value);
   }
 
   void onReceived_battery_soh(List<int> data) {
@@ -730,14 +722,19 @@ class MonitorController extends GetxController {
   }
 
   void startScan() async {
+    update();
     if (connected == false && blueON == true) {
       foundBleUARTDevices = [];
+
       _scanning = true;
+      update();
       _scanStream = await flutterReactiveBle
           .scanForDevices(withServices: [_UART_UUID]).listen(
         (device) {
           if (foundBleUARTDevices.every((element) => element.id != device.id)) {
             foundBleUARTDevices.add(device);
+            update();
+
             selectDevices();
             _stopScan();
           }
@@ -753,10 +750,11 @@ class MonitorController extends GetxController {
     }
   }
 
-  onConnectDevice(int index) {
-    _currentConnectionStream = flutterReactiveBle.connectToAdvertisingDevice(
+  onConnectDevice(int index) async {
+    _currentConnectionStream =
+        await flutterReactiveBle.connectToAdvertisingDevice(
       id: foundBleUARTDevices[index].id,
-      prescanDuration: Duration(seconds: 1),
+      prescanDuration: Duration(seconds: 2),
       withServices: [
         _UART_UUID,
         _CHARACTERISTIC_UUID_SPEED_INTERNAL,
@@ -805,7 +803,7 @@ class MonitorController extends GetxController {
     );
     print(foundBleUARTDevices[index].id);
     _logTexts = "";
-    _connection = _currentConnectionStream.listen((event) {
+    _connection = await _currentConnectionStream.listen((event) {
       var id = event.deviceId.toString();
       switch (event.connectionState) {
         case DeviceConnectionState.connecting:
@@ -815,8 +813,48 @@ class MonitorController extends GetxController {
           }
         case DeviceConnectionState.connected:
           {
+            flutterReactiveBle.clearGattCache(foundBleUARTDevices[index].id);
+            utility().connected_snackbar();
             connected.value = true;
-
+            receivedData.value = 0;
+            speedInternal.value = 0;
+            maxSpeed.value = 0;
+            avgSpeed.value = 0;
+            totalDistance.value = 0;
+            range.value = 0;
+            driving_mode.value = 0;
+            percentage_internal.value = 0;
+            current_level.value = 0;
+            battery_temprature.value = 0;
+            battery_voltage.value = 0;
+            battery_current.value = 0;
+            controller_temprature.value = 0;
+            controller_voltage.value = 0;
+            motor_temprature.value = 0;
+            motor_odo.value = 0;
+            controller_power_tube_fault.value = 0;
+            controller_driving_power_fault.value = 0;
+            controller_over_current_fault.value = 0;
+            controller_over_voltage_protection.value = 0;
+            controller_over_temprature_protection.value = 0;
+            motor_phase_wire_fault.value = 0;
+            motor_hall_fault.value = 0;
+            motor_over_temprature_protection.value = 0;
+            controller_under_voltage_protection.value = 0;
+            motor_stall_protection.value = 0;
+            throttle_fault.value = 0;
+            throttle_not_released.value = 0;
+            bms_low_voltage.value = 0;
+            bms_over_current_charge.value = 0;
+            bms_over_current_discharge.value = 0;
+            bms_over_temprature_discharge.value = 0;
+            bms_cell_open.value = 0;
+            bms_short_discharge.value = 0;
+            bms_over_temprature_charge.value = 0;
+            bms_under_temprature_charge.value = 0;
+            bms_under_temprature_discharge.value = 0;
+            bms_over_temprature_mosfet.value = 0;
+            bms_temprature_sensor_error.value = 0;
             _logTexts = "${_logTexts}Connected to $id\n";
 
             _txCharacteristic = QualifiedCharacteristic(
@@ -1381,7 +1419,7 @@ class MonitorController extends GetxController {
             }, onError: (dynamic error) {
               _logTexts = "${_logTexts}Error:$error$id\n";
             });
-            utility().connected_snackbar();
+
             break;
           }
         case DeviceConnectionState.disconnecting:
@@ -1391,10 +1429,12 @@ class MonitorController extends GetxController {
           }
         case DeviceConnectionState.disconnected:
           {
-            connected.value = false;
+            flutterReactiveBle.clearGattCache(foundBleUARTDevices[index].id);
             _logTexts = "${_logTexts}Disconnected from $id\n";
+            connected.value = false;
             print(_logTexts);
             utility().ble_disconnected_snackbar();
+
             break;
           }
       }
@@ -1406,13 +1446,19 @@ class MonitorController extends GetxController {
   final drive = true.obs;
   final sport = false.obs;
 
-  final tier1 = true.obs;
+  final tier1 = false.obs;
   final tier2 = false.obs;
   final tier3 = false.obs;
+
+  final gear1 = false.obs;
+  final gear2 = false.obs;
+  final gear3 = false.obs;
+
   final max = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    check_trial();
     permission_internal();
     FlutterBlue.instance.state.listen((event) {
       if (event.toString() == 'BluetoothState.on') {
@@ -1423,6 +1469,33 @@ class MonitorController extends GetxController {
         enableBT();
       }
     });
+  }
+
+  Future<void> check_trial() async {
+    print('check trailncalled!');
+    final _instance = LocalStorage();
+    final createdAt = DateTime.parse(_instance.read_createdAt());
+    final currentDate = DateTime.now();
+    var x = currentDate.difference(createdAt);
+    var currentUser = _instance.read_currentUser();
+    bool status = await checkUserStatus(currentUser);
+    if (x.inDays >= 1) {
+      if (status == false) {
+        Get.toNamed('/login');
+        _instance.remove_session();
+      }
+    }
+  }
+
+  Future<bool> checkUserStatus(String email) async {
+    try {
+      final checkuser =
+          await FirebaseFirestore.instance.collection('users').doc(email).get();
+      final status = checkuser.data()!['active'];
+      return status;
+    } on FirebaseException catch (e) {
+      return false;
+    }
   }
 
   Future<void> enableBT() async {
@@ -1438,6 +1511,167 @@ class MonitorController extends GetxController {
     } else {
       theme.value = true;
     }
+  }
+
+  logout() {
+    final _instance = LocalStorage();
+
+    return Get.defaultDialog(
+        title: 'Logout',
+        titleStyle: TextStyle(fontSize: 22),
+        content: Container(
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Column(
+              children: [
+                Divider(
+                  height: 2,
+                  color: Colors.white,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                      ),
+                      child: Text(
+                        'No',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () async {
+                          _instance.remove_session();
+                          Get.toNamed('/login');
+                        },
+                        style: ButtonStyle(
+                          overlayColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                        ),
+                        child: Text(
+                          'Yes',
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        )),
+                  ],
+                ),
+              ],
+            )));
+  }
+
+  gear_selection(
+    bool value1,
+    bool value2,
+    bool value3,
+  ) {
+    final _instance = LocalStorage();
+
+    return Get.defaultDialog(
+        title: 'Are you sure?',
+        titleStyle: TextStyle(fontSize: 22),
+        content: Container(
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Column(
+              children: [
+                Divider(
+                  height: 2,
+                  color: Colors.white,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                      ),
+                      child: Text(
+                        'No',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          gear1.value = value1;
+                          gear2.value = value2;
+                          gear3.value = value3;
+
+                          Get.back();
+                        },
+                        style: ButtonStyle(
+                          overlayColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                        ),
+                        child: Text(
+                          'Yes',
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        )),
+                  ],
+                ),
+              ],
+            )));
+  }
+
+  wheel_selection(
+    bool value1,
+    bool value2,
+    bool value3,
+  ) {
+    final _instance = LocalStorage();
+
+    return Get.defaultDialog(
+        title: 'Are you sure?',
+        titleStyle: TextStyle(fontSize: 22),
+        content: Container(
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Column(
+              children: [
+                Divider(
+                  height: 2,
+                  color: Colors.white,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                      ),
+                      child: Text(
+                        'No',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          tier1.value = value1;
+                          tier2.value = value2;
+                          tier3.value = value3;
+
+                          Get.back();
+                        },
+                        style: ButtonStyle(
+                          overlayColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                        ),
+                        child: Text(
+                          'Yes',
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        )),
+                  ],
+                ),
+              ],
+            )));
   }
 
   selectDevices() async {

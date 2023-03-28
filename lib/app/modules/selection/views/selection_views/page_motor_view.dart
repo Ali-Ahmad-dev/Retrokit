@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:retrokit/app/helper/utility.dart';
 import 'package:retrokit/app/modules/monitor/controllers/monitor_controller.dart';
 
@@ -150,9 +150,8 @@ class PageMotorView extends StatelessWidget {
                                 splashFactory: NoSplash.splashFactory,
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  controller.tier1.value = true;
-                                  controller.tier2.value = false;
-                                  controller.tier3.value = false;
+                                  controller.wheel_selection(
+                                      true, false, false);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -173,9 +172,8 @@ class PageMotorView extends StatelessWidget {
                                 splashFactory: NoSplash.splashFactory,
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  controller.tier1.value = false;
-                                  controller.tier2.value = true;
-                                  controller.tier3.value = false;
+                                  controller.wheel_selection(
+                                      false, true, false);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -187,7 +185,7 @@ class PageMotorView extends StatelessWidget {
                                             : Colors.transparent),
                                   ),
                                   child: Image.asset(
-                                    'assets/images/tier-1.jpg',
+                                    'assets/images/tier-2.jpg',
                                     height: 100,
                                   ),
                                 ),
@@ -196,9 +194,8 @@ class PageMotorView extends StatelessWidget {
                                 splashFactory: NoSplash.splashFactory,
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  controller.tier1.value = false;
-                                  controller.tier2.value = false;
-                                  controller.tier3.value = true;
+                                  controller.wheel_selection(
+                                      false, false, true);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -210,7 +207,7 @@ class PageMotorView extends StatelessWidget {
                                             : Colors.transparent),
                                   ),
                                   child: Image.asset(
-                                    'assets/images/tier-1.jpg',
+                                    'assets/images/tier-3.jpg',
                                     height: 100,
                                   ),
                                 ),
@@ -218,6 +215,231 @@ class PageMotorView extends StatelessWidget {
                             ],
                           ),
                         )),
+
+                    Obx(
+                      () => Padding(
+                        padding:
+                            const EdgeInsets.only(top: 10, right: 0, left: 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              splashFactory: NoSplash.splashFactory,
+                              splashColor: Colors.transparent,
+                              onTap: () {
+                                controller.gear_selection(true, false, false);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  border: Border.all(
+                                      width: 3,
+                                      color: controller.gear1.value == true
+                                          ? Colors.green
+                                          : Colors.transparent),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  width: 91,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    border: Border.all(
+                                        width: 2, color: Colors.white),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/gear_icon.png',
+                                        color: Colors.white,
+                                        width: 55,
+                                      ),
+                                      Text(
+                                        '22 - 36',
+                                        style: TextStyle(
+                                          fontSize: 19,
+                                          fontFamily: 'BebasNeue',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              splashFactory: NoSplash.splashFactory,
+                              splashColor: Colors.transparent,
+                              onTap: () {
+                                controller.gear_selection(false, true, false);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  border: Border.all(
+                                      width: 3,
+                                      color: controller.gear2.value == true
+                                          ? Colors.green
+                                          : Colors.transparent),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  width: 91,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    border: Border.all(
+                                        width: 2, color: Colors.white),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/gear_icon.png',
+                                        color: Colors.white,
+                                        width: 55,
+                                      ),
+                                      Text(
+                                        '22 - 40',
+                                        style: TextStyle(
+                                          fontSize: 19,
+                                          fontFamily: 'BebasNeue',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              splashFactory: NoSplash.splashFactory,
+                              splashColor: Colors.transparent,
+                              onTap: () {
+                                controller.gear_selection(false, false, true);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  border: Border.all(
+                                      width: 3,
+                                      color: controller.gear3.value == true
+                                          ? Colors.green
+                                          : Colors.transparent),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  width: 91,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    border: Border.all(
+                                        width: 2, color: Colors.white),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/gear_icon.png',
+                                        color: Colors.white,
+                                        width: 55,
+                                      ),
+                                      Text(
+                                        '22 - 44',
+                                        style: TextStyle(
+                                          fontSize: 19,
+                                          fontFamily: 'BebasNeue',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Obx(() => Padding(
+                    //       padding: const EdgeInsets.only(top: 10),
+                    //       child: Row(
+                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //         children: [
+                    //           InkWell(
+                    //             splashFactory: NoSplash.splashFactory,
+                    //             splashColor: Colors.transparent,
+                    //             onTap: () {
+                    //               controller.gear1.value = true;
+                    //               controller.gear2.value = false;
+                    //               controller.gear3.value = false;
+                    //             },
+                    //             child: Container(
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(5.0),
+                    //                 border: Border.all(
+                    //                     width: 3,
+                    //                     color: controller.gear1.value == true
+                    //                         ? Colors.green
+                    //                         : Colors.transparent),
+                    //               ),
+                    //               child: Image.asset(
+                    //                 'assets/images/gear-1.png',
+                    //                 height: 100,
+                    //                 fit: BoxFit.cover,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           InkWell(
+                    //             splashFactory: NoSplash.splashFactory,
+                    //             splashColor: Colors.transparent,
+                    //             onTap: () {
+                    //               controller.gear1.value = false;
+                    //               controller.gear2.value = true;
+                    //               controller.gear3.value = false;
+                    //             },
+                    //             child: Container(
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(5.0),
+                    //                 border: Border.all(
+                    //                     width: 3,
+                    //                     color: controller.gear2.value == true
+                    //                         ? Colors.green
+                    //                         : Colors.transparent),
+                    //               ),
+                    //               child: Image.asset(
+                    //                 'assets/images/gear-2.png',
+                    //                 height: 100,
+                    //                 fit: BoxFit.cover,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           InkWell(
+                    //             splashFactory: NoSplash.splashFactory,
+                    //             splashColor: Colors.transparent,
+                    //             onTap: () {
+                    //               controller.gear1.value = false;
+                    //               controller.gear2.value = false;
+                    //               controller.gear3.value = true;
+                    //             },
+                    //             child: Container(
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(5.0),
+                    //                 border: Border.all(
+                    //                     width: 3,
+                    //                     color: controller.gear3.value == true
+                    //                         ? Colors.green
+                    //                         : Colors.transparent),
+                    //               ),
+                    //               child: Image.asset(
+                    //                 'assets/images/gear-3.png',
+                    //                 height: 100,
+                    //                 fit: BoxFit.cover,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     )),
                   ],
                 ),
                 SizedBox(),

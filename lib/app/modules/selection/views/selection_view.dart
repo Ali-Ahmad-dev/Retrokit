@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:retrokit/app/modules/monitor/controllers/monitor_controller.dart';
 import 'package:retrokit/app/modules/selection/views/selection_views/page_battery_view.dart';
 import 'package:retrokit/app/modules/selection/views/selection_views/page_controller_view.dart';
 import 'package:retrokit/app/modules/selection/views/selection_views/page_motor_view.dart';
@@ -14,9 +13,8 @@ class SelectionView extends GetView<SelectionController> {
   const SelectionView({super.key});
 
   _containers(routes, icons, names) {
-    return Bounce(
-      duration: Duration(milliseconds: 170),
-      onPressed: () {
+    return InkWell(
+      onTap: () {
         routes;
       },
       child: Card(
@@ -41,7 +39,7 @@ class SelectionView extends GetView<SelectionController> {
               ),
               Text(
                 '${names}',
-                style: GoogleFonts.bebasNeue(
+                style: TextStyle(
                   fontSize: 19,
                   fontWeight: FontWeight.normal,
                   color: colors().text_color,
@@ -73,17 +71,49 @@ class SelectionView extends GetView<SelectionController> {
 
     return Scaffold(
         backgroundColor: colors().backGround,
+        appBar: AppBar(
+          toolbarHeight: 55,
+          backgroundColor: colors().backGround,
+          automaticallyImplyLeading: false,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20, top: 20),
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.find<MonitorController>().logout();
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      ' Logout ',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    Icon(Icons.login_outlined),
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  padding: EdgeInsets.only(right: 10, left: 10),
+                  backgroundColor:
+                      Color.fromARGB(255, 233, 210, 7), // <-- Button color
+                ),
+              ),
+            ),
+          ],
+        ),
         body: Center(
           child: Container(
-            padding: EdgeInsets.only(top: 80),
             child: ListView(
               children: [
+                SizedBox(
+                  height: 20,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Bounce(
-                      duration: Duration(milliseconds: 170),
-                      onPressed: () {
+                    InkWell(
+                      onTap: () {
                         Get.to(() => PageBatteryView());
                       },
                       child: Card(
@@ -108,8 +138,9 @@ class SelectionView extends GetView<SelectionController> {
                               ),
                               Text(
                                 '${names[0]}',
-                                style: GoogleFonts.bebasNeue(
+                                style: TextStyle(
                                   fontSize: 19,
+                                  fontFamily: 'BebasNeue',
                                   fontWeight: FontWeight.normal,
                                   color: colors().text_color,
                                 ),
@@ -119,9 +150,8 @@ class SelectionView extends GetView<SelectionController> {
                         ),
                       ),
                     ),
-                    Bounce(
-                      duration: Duration(milliseconds: 170),
-                      onPressed: () {
+                    InkWell(
+                      onTap: () {
                         Get.to(() => PageControllerView());
                       },
                       child: Card(
@@ -146,8 +176,9 @@ class SelectionView extends GetView<SelectionController> {
                               ),
                               Text(
                                 '${names[1]}',
-                                style: GoogleFonts.bebasNeue(
+                                style: TextStyle(
                                   fontSize: 19,
+                                  fontFamily: 'BebasNeue',
                                   fontWeight: FontWeight.normal,
                                   color: colors().text_color,
                                 ),
@@ -164,9 +195,8 @@ class SelectionView extends GetView<SelectionController> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Bounce(
-                        duration: Duration(milliseconds: 170),
-                        onPressed: () {
+                      InkWell(
+                        onTap: () {
                           Get.to(() => PageMotorView());
                         },
                         child: Card(
@@ -191,9 +221,10 @@ class SelectionView extends GetView<SelectionController> {
                                 ),
                                 Text(
                                   '${names[2]}',
-                                  style: GoogleFonts.bebasNeue(
+                                  style: TextStyle(
                                     fontSize: 19,
                                     fontWeight: FontWeight.normal,
+                                    fontFamily: 'BebasNeue',
                                     color: colors().text_color,
                                   ),
                                 ),
@@ -202,9 +233,8 @@ class SelectionView extends GetView<SelectionController> {
                           ),
                         ),
                       ),
-                      Bounce(
-                        duration: Duration(milliseconds: 170),
-                        onPressed: () {
+                      InkWell(
+                        onTap: () {
                           Get.to(() => PageVoltageView());
                         },
                         child: Card(
@@ -229,9 +259,10 @@ class SelectionView extends GetView<SelectionController> {
                                 ),
                                 Text(
                                   '${names[3]}',
-                                  style: GoogleFonts.bebasNeue(
+                                  style: TextStyle(
                                     fontSize: 19,
                                     fontWeight: FontWeight.normal,
+                                    fontFamily: 'BebasNeue',
                                     color: colors().text_color,
                                   ),
                                 ),
@@ -245,9 +276,8 @@ class SelectionView extends GetView<SelectionController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Bounce(
-                    duration: Duration(milliseconds: 170),
-                    onPressed: () {
+                  child: InkWell(
+                    onTap: () {
                       Get.to(() => PageWarningView());
                     },
                     child: Card(
@@ -272,9 +302,10 @@ class SelectionView extends GetView<SelectionController> {
                             ),
                             Text(
                               '${names[4]}',
-                              style: GoogleFonts.bebasNeue(
+                              style: TextStyle(
                                 fontSize: 19,
                                 fontWeight: FontWeight.normal,
+                                fontFamily: 'BebasNeue',
                                 color: colors().text_color,
                               ),
                             ),
