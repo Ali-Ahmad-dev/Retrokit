@@ -18,9 +18,9 @@ class PageBatteryView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 35,
-        backgroundColor: colors().backGround,
+        backgroundColor: colors.backGround,
       ),
-      backgroundColor: colors().backGround,
+      backgroundColor: colors.backGround,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -40,7 +40,7 @@ class PageBatteryView extends StatelessWidget {
                         'assets/images/01.png',
                         width: 130,
                         height: 70,
-                        color: colors().text_color,
+                        color: colors.text_color,
                       ),
                     ],
                   ),
@@ -64,11 +64,11 @@ class PageBatteryView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         utility().body_selections_const(
-                            'State of Charge', colors().dark_grey),
+                            'State of Charge', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().percentage_internal,
                             Get.find<MonitorController>().battery_soc_max,
-                            '%')),
+                            '')),
                       ],
                     ),
                     Padding(
@@ -100,11 +100,8 @@ class PageBatteryView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         utility().body_selections_const(
-                            'State of Health', colors().dark_grey),
-                        Obx(() => utility().maximum_value_container(
-                            Get.find<MonitorController>().battery_soh,
-                            Get.find<MonitorController>().battery_soh_max,
-                            '%')),
+                            'State of Health', colors.dark_grey),
+                        SizedBox(),
                       ],
                     ),
                   ],
@@ -135,12 +132,12 @@ class PageBatteryView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         utility().body_selections_const(
-                            'Temprature', colors().dark_grey),
+                            'Temprature', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().battery_temprature,
                             Get.find<MonitorController>()
                                 .battery_temprature_max,
-                            '°C')),
+                            '')),
                       ],
                     ),
                   ],
@@ -170,12 +167,12 @@ class PageBatteryView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        utility().body_selections_const(
-                            'Voltage', colors().dark_grey),
+                        utility()
+                            .body_selections_const('Voltage', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().battery_voltage,
                             Get.find<MonitorController>().battery_voltage_max,
-                            'V')),
+                            '')),
                       ],
                     ),
                     Padding(
@@ -205,12 +202,12 @@ class PageBatteryView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        utility().body_selections_const(
-                            'Current', colors().dark_grey),
+                        utility()
+                            .body_selections_const('Current', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().battery_current,
                             Get.find<MonitorController>().battery_current_max,
-                            'A')),
+                            '')),
                       ],
                     ),
                   ],

@@ -13,7 +13,6 @@ import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
 import '../modules/warning/bindings/warning_binding.dart';
 import '../modules/warning/views/warning_view.dart';
-
 part 'app_routes.dart';
 
 class AppPages {

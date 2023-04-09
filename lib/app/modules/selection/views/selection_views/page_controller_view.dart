@@ -16,7 +16,7 @@ class PageControllerView extends StatelessWidget {
           fontSize: fontSize,
           fontFamily: 'BebasNeue',
           fontWeight: FontWeight.normal,
-          color: colors().text_color,
+          color: colors.text_color,
         ));
   }
 
@@ -26,10 +26,10 @@ class PageControllerView extends StatelessWidget {
         MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Scaffold(
-      backgroundColor: colors().backGround,
+      backgroundColor: colors.backGround,
       appBar: AppBar(
         toolbarHeight: 35,
-        backgroundColor: colors().backGround,
+        backgroundColor: colors.backGround,
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -50,7 +50,7 @@ class PageControllerView extends StatelessWidget {
                         'assets/images/more1.png',
                         width: 130,
                         height: 70,
-                        color: colors().text_color,
+                        color: colors.text_color,
                       ),
                     ],
                   ),
@@ -73,15 +73,16 @@ class PageControllerView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        utility().body_selections_const(
-                            'Voltage', colors().dark_grey),
+                        utility()
+                            .body_selections_const('Voltage', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().controller_voltage,
                             Get.find<MonitorController>()
                                 .controller_voltage_max,
-                            'V')),
+                            '')),
                       ],
                     ),
+                    //if the domain is not working with the fiilte project and the amount was not there and still is able
                     Padding(
                       padding: EdgeInsets.only(
                           top: landscape ? 0 : 15, bottom: landscape ? 0 : 15),
@@ -109,13 +110,13 @@ class PageControllerView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        utility().body_selections_const(
-                            'Current', colors().dark_grey),
+                        utility()
+                            .body_selections_const('Current', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().current_level,
                             Get.find<MonitorController>()
                                 .controller_current_max,
-                            ' A')),
+                            '')),
                       ],
                     ),
                     Padding(
@@ -146,12 +147,12 @@ class PageControllerView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         utility().body_selections_const(
-                            'Temprature', colors().dark_grey),
+                            'Temprature', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().controller_temprature,
                             Get.find<MonitorController>()
                                 .controller_temprature_max,
-                            '°C')),
+                            '')),
                       ],
                     ),
                   ],
@@ -162,6 +163,43 @@ class PageControllerView extends StatelessWidget {
                   child: Divider(
                     color: Colors.grey,
                   ),
+                ),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        utility().heading_selections('THR'),
+                        Obx(
+                          () => utility().heading_selections(
+                              '${Get.find<MonitorController>().controller_throttle}'),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: landscape ? 0 : 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        utility().body_selections_const(
+                            'Throttle', colors.dark_grey),
+                        Obx(() => utility().maximum_value_container(
+                            Get.find<MonitorController>().controller_throttle,
+                            Get.find<MonitorController>()
+                                .controller_throttle_max,
+                            '')),
+                      ],
+                    ),
+                    //if the domain is not working with the fiilte project and the amount was not there and still is able
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: landscape ? 0 : 15, bottom: landscape ? 0 : 15),
+                      child: Divider(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
                 Column(
                   children: [
@@ -181,8 +219,8 @@ class PageControllerView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        utility().body_selections_const(
-                            'Mapping', colors().dark_grey),
+                        utility()
+                            .body_selections_const('Mapping', colors.dark_grey),
                       ],
                     ),
                   ],

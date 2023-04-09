@@ -7,8 +7,8 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:retrokit/app/helper/local_storage_services.dart';
-
 import 'package:retrokit/app/helper/utility.dart';
+import 'package:retrokit/app/modules/selection/controllers/diagnosticController.dart';
 import 'package:retrokit/styles/colors.dart';
 
 class MonitorController extends GetxController {
@@ -19,19 +19,22 @@ class MonitorController extends GetxController {
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26a8");
   //Max Speed  From BLE
   Uuid _CHARACTERISTIC_UUID_MAX_SPEED =
-      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26a9");
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26da");
 //Avg speed  From BLE
   Uuid _CHARACTERISTIC_UUID_AVG_SPEED =
-      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26aa");
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26d9");
 //Tot distance  from BLE
   Uuid _CHARACTERISTIC_UUID_TOT_DISTANCE =
-      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26ab");
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26aa");
 //Range  from BLE
   Uuid _CHARACTERISTIC_UUID_RANGE =
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26ac");
 //ECO,  DRIVE, SPORT  from BLE
   Uuid _CHARACTERISTIC_UUID_DRIVING_RANGE =
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26ad");
+//READY, RUN, OFF
+  Uuid _CHARACTERISTIC_UUID_DRIVING_STATE =
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26a9");
 //Percentage internal to the circle  From BLE & Battery state of charge SOC
   Uuid _CHARACTERISTIC_UUID_PERCENTAGE =
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26ae");
@@ -56,6 +59,9 @@ class MonitorController extends GetxController {
 //Controller Temprature
   Uuid _CHARACTERISTIC_UUID_CONTROLLER_TEMPRATURE =
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26b5");
+//Controller Temprature
+  Uuid _CHARACTERISTIC_UUID_CONTROLLER_THROTTLE =
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26b5");
 //Controller MAPPING
   Uuid _CHARACTERISTIC_UUID_CONTROLLER_MAPPING =
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26ad");
@@ -67,12 +73,15 @@ class MonitorController extends GetxController {
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26b6");
 //Motor ODO
   Uuid _CHARACTERISTIC_UUID_MOTOR_ODO =
-      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26b7");
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26ab");
 //Motor Tiers
   Uuid _CHARACTERISTIC_UUID_MOTOR_TIERS =
-      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26b8");
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26d0");
+//MOTOR GEAR
+  Uuid _CHARACTERISTIC_UUID_MOTOR_GEARS =
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26d1");
 
-//<---ERRORS PAGES--->
+//<---ERRORS-PAGES--->
 
 //CONTROLLER POWER TUBE FAULT
   Uuid _CHARACTERISTIC_UUID_CONTROLLER_POWER_TUBE_FAULT =
@@ -134,7 +143,7 @@ class MonitorController extends GetxController {
 //BMS OVER TEMPRATURE CHARGE
   Uuid _CHARACTERISTIC_UUID_BMS_OVER_TEMPRATURE_CHARGE =
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26cc");
-//BMS UNDER TEMPRATURE CHARGE
+
   Uuid _CHARACTERISTIC_UUID_BMS_UNDER_TEMPRATURE_CHARGE =
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26cd");
 //BMS OVER TEMPRATURE MOSFET
@@ -143,6 +152,19 @@ class MonitorController extends GetxController {
 //BMS TEMPRATURE SENSOR ERROR
   Uuid _CHARACTERISTIC_UUID_BMS_TEMPRATURE_SENSOR_ERROR =
       Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26cf");
+//BMS Status Error
+  Uuid _CHARACTERISTIC_UUID_BMS_STATUS =
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26d5");
+//VCU Status Error
+  Uuid _CHARACTERISTIC_UUID_VCU_STATUS =
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26d4");
+  //VCU Status Error
+  Uuid _CHARACTERISTIC_UUID_BMS_DISCHARGING =
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26d6");
+  Uuid _CHARACTERISTIC_UUID_BMS_CHARGING =
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26d7");
+  Uuid _CHARACTERISTIC_UUID_BMS_CHARGE_COMPLETED =
+      Uuid.parse("beb5483e-36e1-4688-b7f5-ea07361b26d8");
 
   final flutterReactiveBle = FlutterReactiveBle();
   List<DiscoveredDevice> foundBleUARTDevices = [];
@@ -158,6 +180,7 @@ class MonitorController extends GetxController {
   late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_TOT_DISTANCE;
   late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_RANGE;
   late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_DRIVING_MODE;
+  late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_DRIVING_STATE;
   late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_PERCENTAGE;
   late QualifiedCharacteristic
       _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_CURRENT;
@@ -175,9 +198,11 @@ class MonitorController extends GetxController {
   late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_MOTOR_RPM;
   late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_MOTOR_TEMPRATURE;
   late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_MOTOR_ODO;
-  /////////
   late QualifiedCharacteristic
       _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_POWER_TUBE_FAULT;
+  late QualifiedCharacteristic
+      _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_THROTTLE;
+
   late QualifiedCharacteristic
       _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_DRIVING_POWER_FAULT;
   late QualifiedCharacteristic
@@ -214,11 +239,19 @@ class MonitorController extends GetxController {
       _QUALIFIED_CHARACTERISTIC_UUID_BMS_OVER_TEMPRATURE_CHARGE;
   late QualifiedCharacteristic
       _QUALIFIED_CHARACTERISTIC_UUID_BMS_UNDER_TEMPRATURE_CHARGE;
-
   late QualifiedCharacteristic
       _QUALIFIED_CHARACTERISTIC_UUID_BMS_OVER_TEMPRATURE_MOSFET;
   late QualifiedCharacteristic
       _QUALIFIED_CHARACTERISTIC_UUID_BMS_TEMPRATURE_SENSOR_ERROR;
+  late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_BMS_STATUS;
+  late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_VCU_STATUS;
+  late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_BMS_DISCHARGING;
+  late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_UUID_BMS_CHARGING;
+  late QualifiedCharacteristic
+      _QUALIFIED_CHARACTERISTIC_UUID_BMS_CHARGE_COMPLETED;
+
+  late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_GEAR;
+  late QualifiedCharacteristic _QUALIFIED_CHARACTERISTIC_WHEEL;
 
   //Stream listening data from esp32
   late Stream<List<int>> receivedData_Stream;
@@ -228,10 +261,10 @@ class MonitorController extends GetxController {
   late Stream<List<int>> _totalDistance_Stream;
   late Stream<List<int>> _range_Stream;
   late Stream<List<int>> _driving_mode_Stream;
+  late Stream<List<int>> _driving_mode_State_stream;
   late Stream<List<int>> _percentage_internal_Stream;
   late Stream<List<int>> _current_level_Stream;
-  //PAGE_BATTERY_FROM_SELECTION
-
+//PAGE_BATTERY_FROM_SELECTION
   late Stream<List<int>> _battery_state_of_health_stream;
   late Stream<List<int>> _battery_temprature_stream;
   late Stream<List<int>> _battery_voltage_stream;
@@ -240,10 +273,13 @@ class MonitorController extends GetxController {
   late Stream<List<int>> _controller_temprature_stream;
   late Stream<List<int>> _controller_voltage_stream;
   late Stream<List<int>> _controller_mapping_stream;
+  late Stream<List<int>> _controller_throttle_stream;
+
   //MOTOR_FROM_SELECTION
   late Stream<List<int>> _motor_revol_stream;
   late Stream<List<int>> _motor_temprature_stream;
   late Stream<List<int>> _motor_odo_stream;
+
   //ERROR PAGE STREAMS
   late Stream<List<int>> controller_power_tube_fault_stream;
   late Stream<List<int>> controller_driving_power_fault_stream;
@@ -267,9 +303,14 @@ class MonitorController extends GetxController {
   late Stream<List<int>> bms_under_temprature_charge_stream;
   late Stream<List<int>> bms_under_temprature_discharge_stream;
   late Stream<List<int>> warnings_stream;
-
   late Stream<List<int>> bms_over_temprature_mosfet_stream;
   late Stream<List<int>> bms_temprature_sensor_error_stream;
+  late Stream<List<int>> bms_status_stream;
+  late Stream<List<int>> vcu_status_stream;
+  late Stream<List<int>> bms_discharging_stream;
+  late Stream<List<int>> bms_charging_stream;
+  late Stream<List<int>> bms_charge_completed_stream;
+
 //SCANNING FROM BLE
   bool _scanning = false;
 //Values from ESP
@@ -285,7 +326,9 @@ class MonitorController extends GetxController {
   RxInt avgSpeed = 0.obs;
   RxInt totalDistance = 0.obs;
   RxInt range = 0.obs;
+  RxInt driving_state = 0.obs;
   RxInt driving_mode = 0.obs;
+
   RxInt percentage_internal = 0.obs;
   RxInt current_level = 0.obs;
 //BATTERY PAGE 0
@@ -293,16 +336,17 @@ class MonitorController extends GetxController {
   RxInt battery_temprature = 0.obs;
   RxInt battery_voltage = 0.obs;
   RxInt battery_current = 0.obs;
-//IntLLER PAGE READ
+//PAGE READ
   RxInt controller_temprature = 0.obs;
   RxInt controller_voltage = 0.obs;
+  RxInt controller_throttle = 0.obs;
+
   RxString controller_map = ''.obs;
 //MOTOR PAGE READ
   RxInt motor_rpm = 0.obs;
   RxInt motor_temprature = 0.obs;
   RxInt motor_odo = 0.obs;
-  RxString motor_tier = '...'.obs;
-
+  RxString motor_tier = ''.obs;
 //BATTERY MAX VALUES
   RxInt battery_soc_max = 0.obs;
   RxInt battery_soh_max = 0.obs;
@@ -313,11 +357,13 @@ class MonitorController extends GetxController {
   RxInt controller_current_max = 0.obs;
   RxInt controller_temprature_max = 0.obs;
   RxInt controller_voltage_max = 0.obs;
-  RxString controller_map_max = ''.obs;
+  RxInt controller_throttle_max = 0.obs;
+
 //MOTOR MAX VALUES
   RxInt motor_rpm_max = 0.obs;
   RxInt motor_temprature_max = 0.obs;
   RxInt motor_odo_max = 0.obs;
+
 //ERROR PAGE
   RxInt controller_power_tube_fault = 2.obs;
   RxInt controller_driving_power_fault = 2.obs;
@@ -342,7 +388,7 @@ class MonitorController extends GetxController {
   RxInt bms_under_temprature_discharge = 0.obs;
   RxInt bms_over_temprature_mosfet = 0.obs;
   RxInt bms_temprature_sensor_error = 0.obs;
-  ///////////////////////
+
   RxBool controller_power_tube_fault_state = false.obs;
   RxBool controller_driving_power_fault_state = false.obs;
   RxBool controller_over_current_fault_state = false.obs;
@@ -366,25 +412,18 @@ class MonitorController extends GetxController {
   RxBool bms_under_temprature_discharge_state = false.obs;
   RxBool bms_over_temprature_mosfet_state = false.obs;
   RxBool bms_temprature_sensor_error_state = false.obs;
-
-  change_value_false() {
-    controller_power_tube_fault.value = 1;
-    motor_phase_wire_fault.value = 1;
-    controller_over_voltage_protection.value = 1;
+  RxInt bms_status = 10.obs;
+  RxInt vcu_status = 10.obs;
+  RxInt bms_discharging = 10.obs;
+  RxInt bms_charging = 10.obs;
+  RxInt bms_charge_comleted = 10.obs;
+  bool graph_time = true;
+  void _sendData(QualifiedCharacteristic CharacteristicIds, values) async {
+    await flutterReactiveBle.writeCharacteristicWithResponse(CharacteristicIds,
+        value: values.toString().codeUnits);
   }
 
-  change_value_true() {
-    controller_power_tube_fault.value = 0;
-    motor_phase_wire_fault.value = 0;
-    controller_over_voltage_protection.value = 0;
-  }
-
-  change_value_state() {
-    controller_power_tube_fault_state.value = true;
-    motor_phase_wire_fault_state.value = true;
-    controller_over_voltage_protection_state.value = true;
-  }
-  //WHEN DATA IS RECIEVED FROM ESP
+  // WHEN DATA IS RECIEVED FROM ESP
 
   void onReceived_SpeedInternal(List<int> data) {
     speedInternal.value = int.parse("${String.fromCharCodes(data)}");
@@ -399,7 +438,7 @@ class MonitorController extends GetxController {
   }
 
   void onReceived_totalDistance(List<int> data) {
-    totalDistance.value = int.parse("${String.fromCharCodes(data)}");
+    totalDistance.value = int.parse("${String.fromCharCodes(data)}") * 10;
   }
 
   void onReceived_range(List<int> data) {
@@ -407,12 +446,17 @@ class MonitorController extends GetxController {
   }
 
   void onReceived_percentage_internal(List<int> data) {
+    if (graph_time == true) {
+      Get.find<diagnosticController>().dateTimeInitial =
+          DateTime.now().millisecondsSinceEpoch;
+    }
+    Get.find<diagnosticController>().addSpotX_Y();
+    graph_time = false;
     percentage_internal.value = int.parse("${String.fromCharCodes(data)}");
   }
 
   void onReceived_current_level(List<int> data) {
     current_level.value = int.parse("${String.fromCharCodes(data)}") - 40;
-    print(current_level.value);
   }
 
   void onReceived_battery_soh(List<int> data) {
@@ -443,6 +487,12 @@ class MonitorController extends GetxController {
     controller_map.value = "${String.fromCharCodes(data)}";
   }
 
+  void onReceived_controller_throttle(List<int> data) {
+    int x = int.parse("${String.fromCharCodes(data)}");
+    double y = x / 10;
+    controller_throttle.value = y.toInt();
+  }
+
   void onReceived_motor_revol(List<int> data) {
     motor_rpm.value = int.parse("${String.fromCharCodes(data)}");
   }
@@ -454,11 +504,9 @@ class MonitorController extends GetxController {
   void onReceived_motor_odo(List<int> data) {
     motor_odo.value = int.parse("${String.fromCharCodes(data)}");
   }
-/////////////////////////////////////
 
   void onReceived_controller_power_tube_fault(List<int> data) {
     int x = int.parse("${String.fromCharCodes(data)}");
-
     if (x == 1) {
       controller_power_tube_fault_state.value = true;
     }
@@ -687,6 +735,31 @@ class MonitorController extends GetxController {
     }
   }
 
+  void onReceived_bms_status(List<int> data) {
+    int x = int.parse("${String.fromCharCodes(data)}");
+    bms_status.value = x;
+  }
+
+  void onReceived_vcu_status(List<int> data) {
+    int x = int.parse("${String.fromCharCodes(data)}");
+    vcu_status.value = x;
+  }
+
+  void onReceived_bms_charging(List<int> data) {
+    int x = int.parse("${String.fromCharCodes(data)}");
+    bms_charging.value = x;
+  }
+
+  void onReceived_bms_discharging(List<int> data) {
+    int x = int.parse("${String.fromCharCodes(data)}");
+    bms_discharging.value = x;
+  }
+
+  void onReceived_bms_charge_completed(List<int> data) {
+    int x = int.parse("${String.fromCharCodes(data)}");
+    bms_charge_comleted.value = x;
+  }
+
   void onReceived_driving_mode(List<int> data) {
     driving_mode.value = int.parse("${String.fromCharCodes(data)}");
 
@@ -709,6 +782,10 @@ class MonitorController extends GetxController {
                     sport.value = true,
                   }
                 : {};
+  }
+
+  void onReceived_driving_state(List<int> data) {
+    driving_state.value = int.parse("${String.fromCharCodes(data)}");
   }
 
   void _stopScan() async {
@@ -734,7 +811,6 @@ class MonitorController extends GetxController {
           if (foundBleUARTDevices.every((element) => element.id != device.id)) {
             foundBleUARTDevices.add(device);
             update();
-
             selectDevices();
             _stopScan();
           }
@@ -744,7 +820,7 @@ class MonitorController extends GetxController {
         },
       );
     }
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 3));
     if (foundBleUARTDevices.length == 0) {
       utility().device_not_found_snackbar();
     }
@@ -754,7 +830,7 @@ class MonitorController extends GetxController {
     _currentConnectionStream =
         await flutterReactiveBle.connectToAdvertisingDevice(
       id: foundBleUARTDevices[index].id,
-      prescanDuration: Duration(seconds: 2),
+      prescanDuration: Duration(seconds: 5),
       withServices: [
         _UART_UUID,
         _CHARACTERISTIC_UUID_SPEED_INTERNAL,
@@ -798,10 +874,18 @@ class MonitorController extends GetxController {
         _CHARACTERISTIC_UUID_BMS_OVER_TEMPRATURE_CHARGE,
         _CHARACTERISTIC_UUID_BMS_UNDER_TEMPRATURE_CHARGE,
         _CHARACTERISTIC_UUID_BMS_OVER_TEMPRATURE_MOSFET,
-        _CHARACTERISTIC_UUID_BMS_TEMPRATURE_SENSOR_ERROR
+        _CHARACTERISTIC_UUID_BMS_TEMPRATURE_SENSOR_ERROR,
+        _CHARACTERISTIC_UUID_DRIVING_STATE,
+        _CHARACTERISTIC_UUID_MOTOR_GEARS,
+        _CHARACTERISTIC_UUID_MOTOR_TIERS,
+        _CHARACTERISTIC_UUID_CONTROLLER_THROTTLE,
+        _CHARACTERISTIC_UUID_BMS_STATUS,
+        _CHARACTERISTIC_UUID_VCU_STATUS,
+        _CHARACTERISTIC_UUID_BMS_CHARGING,
+        _CHARACTERISTIC_UUID_BMS_DISCHARGING,
+        _CHARACTERISTIC_UUID_BMS_CHARGE_COMPLETED,
       ],
     );
-    print(foundBleUARTDevices[index].id);
     _logTexts = "";
     _connection = await _currentConnectionStream.listen((event) {
       var id = event.deviceId.toString();
@@ -855,6 +939,12 @@ class MonitorController extends GetxController {
             bms_under_temprature_discharge.value = 0;
             bms_over_temprature_mosfet.value = 0;
             bms_temprature_sensor_error.value = 0;
+            bms_status.value = 10;
+            vcu_status.value = 10;
+            bms_charging.value = 10;
+            bms_discharging.value = 10;
+            bms_charge_comleted.value = 10;
+
             _logTexts = "${_logTexts}Connected to $id\n";
 
             _txCharacteristic = QualifiedCharacteristic(
@@ -887,6 +977,11 @@ class MonitorController extends GetxController {
                 QualifiedCharacteristic(
                     serviceId: _UART_UUID,
                     characteristicId: _CHARACTERISTIC_UUID_DRIVING_RANGE,
+                    deviceId: event.deviceId);
+            _QUALIFIED_CHARACTERISTIC_UUID_DRIVING_STATE =
+                QualifiedCharacteristic(
+                    serviceId: _UART_UUID,
+                    characteristicId: _CHARACTERISTIC_UUID_DRIVING_STATE,
                     deviceId: event.deviceId);
             _QUALIFIED_CHARACTERISTIC_UUID_PERCENTAGE = QualifiedCharacteristic(
                 serviceId: _UART_UUID,
@@ -928,6 +1023,12 @@ class MonitorController extends GetxController {
                     characteristicId:
                         _CHARACTERISTIC_UUID_CONTROLLER_TEMPRATURE,
                     deviceId: event.deviceId);
+
+            _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_THROTTLE =
+                QualifiedCharacteristic(
+                    serviceId: _UART_UUID,
+                    characteristicId: _CHARACTERISTIC_UUID_CONTROLLER_THROTTLE,
+                    deviceId: event.deviceId);
             _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_MAPPING =
                 QualifiedCharacteristic(
                     serviceId: _UART_UUID,
@@ -946,7 +1047,6 @@ class MonitorController extends GetxController {
                 serviceId: _UART_UUID,
                 characteristicId: _CHARACTERISTIC_UUID_MOTOR_ODO,
                 deviceId: event.deviceId);
-
             _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_POWER_TUBE_FAULT =
                 QualifiedCharacteristic(
                     serviceId: _UART_UUID,
@@ -1079,6 +1179,37 @@ class MonitorController extends GetxController {
                     characteristicId:
                         _CHARACTERISTIC_UUID_BMS_TEMPRATURE_SENSOR_ERROR,
                     deviceId: event.deviceId);
+            _QUALIFIED_CHARACTERISTIC_WHEEL = QualifiedCharacteristic(
+                serviceId: _UART_UUID,
+                characteristicId: _CHARACTERISTIC_UUID_MOTOR_TIERS,
+                deviceId: event.deviceId);
+            _QUALIFIED_CHARACTERISTIC_GEAR = QualifiedCharacteristic(
+                serviceId: _UART_UUID,
+                characteristicId: _CHARACTERISTIC_UUID_MOTOR_GEARS,
+                deviceId: event.deviceId);
+            _QUALIFIED_CHARACTERISTIC_UUID_BMS_STATUS = QualifiedCharacteristic(
+                serviceId: _UART_UUID,
+                characteristicId: _CHARACTERISTIC_UUID_BMS_STATUS,
+                deviceId: event.deviceId);
+            _QUALIFIED_CHARACTERISTIC_UUID_VCU_STATUS = QualifiedCharacteristic(
+                serviceId: _UART_UUID,
+                characteristicId: _CHARACTERISTIC_UUID_VCU_STATUS,
+                deviceId: event.deviceId);
+            _QUALIFIED_CHARACTERISTIC_UUID_BMS_CHARGING =
+                QualifiedCharacteristic(
+                    serviceId: _UART_UUID,
+                    characteristicId: _CHARACTERISTIC_UUID_BMS_CHARGING,
+                    deviceId: event.deviceId);
+            _QUALIFIED_CHARACTERISTIC_UUID_BMS_DISCHARGING =
+                QualifiedCharacteristic(
+                    serviceId: _UART_UUID,
+                    characteristicId: _CHARACTERISTIC_UUID_BMS_DISCHARGING,
+                    deviceId: event.deviceId);
+            _QUALIFIED_CHARACTERISTIC_UUID_BMS_CHARGE_COMPLETED =
+                QualifiedCharacteristic(
+                    serviceId: _UART_UUID,
+                    characteristicId: _CHARACTERISTIC_UUID_BMS_CHARGE_COMPLETED,
+                    deviceId: event.deviceId);
 
             receivedData_Stream =
                 flutterReactiveBle.subscribeToCharacteristic(_txCharacteristic);
@@ -1122,10 +1253,19 @@ class MonitorController extends GetxController {
             }, onError: (dynamic error) {
               _logTexts = "${_logTexts}Error:$error$id\n";
             });
+
             _driving_mode_Stream = flutterReactiveBle.subscribeToCharacteristic(
                 _QUALIFIED_CHARACTERISTIC_UUID_DRIVING_MODE);
             _driving_mode_Stream.listen((data) {
               onReceived_driving_mode(data);
+            }, onError: (dynamic error) {
+              _logTexts = "${_logTexts}Error:$error$id\n";
+            });
+            _driving_mode_State_stream =
+                flutterReactiveBle.subscribeToCharacteristic(
+                    _QUALIFIED_CHARACTERISTIC_UUID_DRIVING_STATE);
+            _driving_mode_State_stream.listen((data) {
+              onReceived_driving_state(data);
             }, onError: (dynamic error) {
               _logTexts = "${_logTexts}Error:$error$id\n";
             });
@@ -1194,7 +1334,14 @@ class MonitorController extends GetxController {
             }, onError: (dynamic error) {
               _logTexts = "${_logTexts}Error:$error$id\n";
             });
-
+            _controller_throttle_stream =
+                flutterReactiveBle.subscribeToCharacteristic(
+                    _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_THROTTLE);
+            _controller_throttle_stream.listen((data) {
+              onReceived_controller_throttle(data);
+            }, onError: (dynamic error) {
+              _logTexts = "${_logTexts}Error:$error$id\n";
+            });
             _controller_mapping_stream =
                 flutterReactiveBle.subscribeToCharacteristic(
                     _QUALIFIED_CHARACTERISTIC_UUID_CONTROLLER_MAPPING);
@@ -1362,7 +1509,6 @@ class MonitorController extends GetxController {
             }, onError: (dynamic error) {
               _logTexts = "${_logTexts}Error:$error$id\n";
             });
-
             bms_under_temprature_charge_stream =
                 flutterReactiveBle.subscribeToCharacteristic(
                     _QUALIFIED_CHARACTERISTIC_UUID_BMS_UNDER_TEMPRATURE_DISCHARGE);
@@ -1420,6 +1566,47 @@ class MonitorController extends GetxController {
               _logTexts = "${_logTexts}Error:$error$id\n";
             });
 
+            bms_status_stream = flutterReactiveBle.subscribeToCharacteristic(
+                _QUALIFIED_CHARACTERISTIC_UUID_BMS_STATUS);
+            bms_status_stream.listen((data) {
+              onReceived_bms_status(data);
+            }, onError: (dynamic error) {
+              _logTexts = "${_logTexts}Error:$error$id\n";
+            });
+
+            vcu_status_stream = flutterReactiveBle.subscribeToCharacteristic(
+                _QUALIFIED_CHARACTERISTIC_UUID_VCU_STATUS);
+            vcu_status_stream.listen((data) {
+              onReceived_vcu_status(data);
+            }, onError: (dynamic error) {
+              _logTexts = "${_logTexts}Error:$error$id\n";
+            });
+
+            bms_charging_stream = flutterReactiveBle.subscribeToCharacteristic(
+                _QUALIFIED_CHARACTERISTIC_UUID_BMS_CHARGING);
+            bms_charging_stream.listen((data) {
+              onReceived_bms_charging(data);
+            }, onError: (dynamic error) {
+              _logTexts = "${_logTexts}Error:$error$id\n";
+            });
+            bms_discharging_stream =
+                flutterReactiveBle.subscribeToCharacteristic(
+                    _QUALIFIED_CHARACTERISTIC_UUID_BMS_DISCHARGING);
+            bms_discharging_stream.listen((data) {
+              onReceived_bms_discharging(data);
+            }, onError: (dynamic error) {
+              _logTexts = "${_logTexts}Error:$error$id\n";
+            });
+
+            bms_charge_completed_stream =
+                flutterReactiveBle.subscribeToCharacteristic(
+                    _QUALIFIED_CHARACTERISTIC_UUID_BMS_CHARGE_COMPLETED);
+            bms_charge_completed_stream.listen((data) {
+              onReceived_bms_charge_completed(data);
+            }, onError: (dynamic error) {
+              _logTexts = "${_logTexts}Error:$error$id\n";
+            });
+
             break;
           }
         case DeviceConnectionState.disconnecting:
@@ -1432,7 +1619,6 @@ class MonitorController extends GetxController {
             flutterReactiveBle.clearGattCache(foundBleUARTDevices[index].id);
             _logTexts = "${_logTexts}Disconnected from $id\n";
             connected.value = false;
-            print(_logTexts);
             utility().ble_disconnected_snackbar();
 
             break;
@@ -1441,7 +1627,6 @@ class MonitorController extends GetxController {
     });
   }
 
-  final theme = false.obs;
   final eco = false.obs;
   final drive = true.obs;
   final sport = false.obs;
@@ -1505,14 +1690,6 @@ class MonitorController extends GetxController {
     });
   }
 
-  void theme_change() {
-    if (theme.value == true) {
-      theme.value = false;
-    } else {
-      theme.value = true;
-    }
-  }
-
   logout() {
     final _instance = LocalStorage();
 
@@ -1566,9 +1743,8 @@ class MonitorController extends GetxController {
     bool value1,
     bool value2,
     bool value3,
+    valueToBle,
   ) {
-    final _instance = LocalStorage();
-
     return Get.defaultDialog(
         title: 'Are you sure?',
         titleStyle: TextStyle(fontSize: 22),
@@ -1598,6 +1774,7 @@ class MonitorController extends GetxController {
                     ),
                     TextButton(
                         onPressed: () {
+                          _sendData(_QUALIFIED_CHARACTERISTIC_GEAR, valueToBle);
                           gear1.value = value1;
                           gear2.value = value2;
                           gear3.value = value3;
@@ -1618,13 +1795,7 @@ class MonitorController extends GetxController {
             )));
   }
 
-  wheel_selection(
-    bool value1,
-    bool value2,
-    bool value3,
-  ) {
-    final _instance = LocalStorage();
-
+  wheel_selection(bool value1, bool value2, bool value3, valueToBle) {
     return Get.defaultDialog(
         title: 'Are you sure?',
         titleStyle: TextStyle(fontSize: 22),
@@ -1657,6 +1828,8 @@ class MonitorController extends GetxController {
                           tier1.value = value1;
                           tier2.value = value2;
                           tier3.value = value3;
+                          _sendData(
+                              _QUALIFIED_CHARACTERISTIC_WHEEL, valueToBle);
 
                           Get.back();
                         },
@@ -1697,7 +1870,7 @@ class MonitorController extends GetxController {
                           child: Text(
                             'Select Device',
                             style: TextStyle(
-                                color: colors().text_color,
+                                color: colors.text_color,
                                 fontSize: 18,
                                 decoration: TextDecoration.none),
                           ),
@@ -1709,7 +1882,7 @@ class MonitorController extends GetxController {
                           Text(
                             'Retrokit',
                             style: TextStyle(
-                                color: colors().text_color,
+                                color: colors.text_color,
                                 fontSize: 17,
                                 decoration: TextDecoration.none),
                           ),
@@ -1739,7 +1912,7 @@ class MonitorController extends GetxController {
                         ],
                       ),
                       Divider(
-                        color: colors().text_color,
+                        color: colors.text_color,
                       ),
                     ],
                   ),

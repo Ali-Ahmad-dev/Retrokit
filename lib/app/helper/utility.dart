@@ -101,7 +101,7 @@ class utility {
           fontSize: 27,
           fontWeight: FontWeight.bold,
           fontFamily: 'BebasNeue',
-          color: colors().text_color,
+          color: colors.text_color,
         ));
   }
 

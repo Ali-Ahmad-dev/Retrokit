@@ -16,6 +16,7 @@ class SignupController extends GetxController {
   final nameController = TextEditingController().obs;
   final surenameController = TextEditingController().obs;
   final chasssisController = TextEditingController().obs;
+  final chasssisNumController = TextEditingController().obs;
 
   final emailValidator = false.obs;
   final passwordValidator = false.obs;
@@ -23,6 +24,8 @@ class SignupController extends GetxController {
   final surenameValidator = false.obs;
   final phoneValidator = false.obs;
   final chassisValidator = false.obs;
+  final chassisNumValidator = false.obs;
+
   RxBool isObscure = true.obs;
 
   save_data() {}
@@ -64,11 +67,16 @@ class SignupController extends GetxController {
           .then((value) => phoneValidator.value = false);
       execute = true;
     }
-    if (chasssisController.value.text.length == 0 ||
-        chasssisController.value.text.isNumericOnly == false) {
+    if (chasssisController.value.text.length == 0) {
       chassisValidator.value = true;
       Future.delayed(Duration(seconds: 3))
           .then((value) => chassisValidator.value = false);
+      execute = true;
+    }
+    if (chasssisNumController.value.text.length == 0) {
+      chassisNumValidator.value = true;
+      Future.delayed(Duration(seconds: 3))
+          .then((value) => chassisNumValidator.value = false);
       execute = true;
     }
     return execute;
@@ -102,7 +110,8 @@ class SignupController extends GetxController {
                 'name': nameController.value.text,
                 'surename': surenameController.value.text,
                 'email': emailController.value.text,
-                'chassis': chasssisController.value.text,
+                'chassis':
+                    '${chasssisController.value.text} ${chasssisNumController.value.text}',
                 'phone': phoneController.value.text,
                 'createdAt': DateTime.now().toString(),
                 'active': false,

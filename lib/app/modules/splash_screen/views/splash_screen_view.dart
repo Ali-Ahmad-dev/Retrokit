@@ -11,7 +11,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
     Get.put(SplashScreenController());
 
     return Scaffold(
-      backgroundColor: colors().backGround,
+      backgroundColor: colors.backGround,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

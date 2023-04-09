@@ -10,7 +10,7 @@ class SignupView extends GetView<SignupController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: colors().backGround,
+      backgroundColor: colors.backGround,
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
@@ -118,6 +118,7 @@ class SignupView extends GetView<SignupController> {
                       ),
                     )),
                 Obx(() => TextFormField(
+                      keyboardType: TextInputType.emailAddress,
                       cursorColor: Colors.yellow,
                       controller: controller.emailController.value,
                       decoration: InputDecoration(
@@ -209,9 +210,11 @@ class SignupView extends GetView<SignupController> {
                       ),
                     )),
                 Obx(() => TextFormField(
+                      keyboardType: TextInputType.number,
                       cursorColor: Colors.yellow,
                       controller: controller.phoneController.value,
                       decoration: InputDecoration(
+                          counterText: "",
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 2, color: Colors.white), //<-- SEE HERE
@@ -251,34 +254,80 @@ class SignupView extends GetView<SignupController> {
                             : null,
                       ),
                     )),
-                Obx(() => TextFormField(
-                      cursorColor: Colors.yellow,
-                      controller: controller.chasssisController.value,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 2, color: Colors.white), //<-- SEE HERE
-                            borderRadius: BorderRadius.circular(10.0),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, left: 10),
+                  child: Text(
+                    'Chassis',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Obx(() => Flexible(
+                          child: TextFormField(
+                            maxLength: 5,
+                            cursorColor: Colors.yellow,
+                            controller: controller.chasssisController.value,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 12.0, horizontal: 10),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 2,
+                                    color: Colors.white), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 2,
+                                    color: Colors.yellow), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              border: InputBorder.none,
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 2, color: Colors.yellow), //<-- SEE HERE
-                            borderRadius: BorderRadius.circular(10.0),
+                        )),
+                    Text(
+                      ' * ',
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: Color.fromARGB(
+                          255,
+                          242,
+                          201,
+                          25,
+                        ),
+                      ),
+                    ),
+                    Obx(() => Flexible(
+                          child: TextFormField(
+                            maxLength: 7,
+                            keyboardType: TextInputType.number,
+                            cursorColor: Colors.yellow,
+                            controller: controller.chasssisNumController.value,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 12.0, horizontal: 10),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 2,
+                                    color: Colors.white), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 2,
+                                    color: Colors.yellow), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              border: InputBorder.none,
+                            ),
                           ),
-                          hintText: 'Chassis',
-                          border: InputBorder.none,
-                          suffixIcon: IconButton(
-                              onPressed: null,
-                              icon: Icon(
-                                Icons.numbers,
-                                color: Color.fromARGB(
-                                  255,
-                                  242,
-                                  201,
-                                  25,
-                                ),
-                              ))),
-                    )),
+                        )),
+                  ],
+                ),
                 Obx(() => Padding(
                       padding: const EdgeInsets.only(left: 7, top: 7),
                       child: SizedBox(

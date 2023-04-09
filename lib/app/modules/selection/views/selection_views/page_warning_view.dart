@@ -158,6 +158,14 @@ class PageWarningView extends StatelessWidget {
     },
   ].obs;
 
+  RxList<Map> non_warnings_data = [
+    {
+      'value': Get.find<MonitorController>().bms_temprature_sensor_error,
+      'title': 'BMS Temperature Sensor Error',
+      'code': 'P0023',
+    },
+  ].obs;
+
   error_handler_containers(RxInt x, String title, String code, RxBool state) {
     return state.value == true
         ? Obx(() => Container(
@@ -202,8 +210,6 @@ class PageWarningView extends StatelessWidget {
     warnings_data.sort((a, b) => b['value'].value.compareTo(a['value'].value));
   }
 
-  late Stream<List<int>> warnings_stream;
-
   @override
   Widget build(BuildContext context) {
     final landscape =
@@ -212,9 +218,9 @@ class PageWarningView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 35,
-        backgroundColor: colors().backGround,
+        backgroundColor: colors.backGround,
       ),
-      backgroundColor: colors().backGround,
+      backgroundColor: colors.backGround,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -230,7 +236,7 @@ class PageWarningView extends StatelessWidget {
                       'assets/images/03.png',
                       width: 130,
                       height: 70,
-                      color: colors().text_color,
+                      color: colors.text_color,
                     ),
                   ],
                 ),

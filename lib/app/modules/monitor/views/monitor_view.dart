@@ -24,7 +24,7 @@ class MonitorView extends GetView<MonitorController> {
             fontSize: fontSize,
             fontWeight: FontWeight.normal,
             fontFamily: 'BebasNeue',
-            color: colors().text_color,
+            color: colors.text_color,
           ));
     }
 
@@ -35,16 +35,11 @@ class MonitorView extends GetView<MonitorController> {
             fontSize: fontSize,
             fontFamily: 'BebasNeue',
             fontWeight: FontWeight.bold,
-            color: colors().text_color,
+            color: colors.text_color,
           ));
     }
 
-    List<String> headings = const [
-      'Max speed',
-      'Avg speed',
-      'Tot distance',
-      'Range'
-    ];
+    List<String> headings = ['Max speed', 'Avg speed', 'Trip 1', 'Range'];
 
     List<RxInt> values = [
       controller.maxSpeed,
@@ -65,7 +60,7 @@ class MonitorView extends GetView<MonitorController> {
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
-            border: Border.all(width: 1.5, color: colors().text_color),
+            border: Border.all(width: 1.5, color: colors.text_color),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -73,16 +68,16 @@ class MonitorView extends GetView<MonitorController> {
               Padding(
                   padding: EdgeInsets.only(top: 3, bottom: 5),
                   child: headingTextWidget(
-                      headings[i], landscape ? 12 : 14, colors().text_color)),
+                      headings[i], landscape ? 12 : 14, colors.text_color)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   textWidget(values[i].value.toString(), landscape ? 24 : 27,
-                      colors().text_color),
+                      colors.text_color),
                   Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: textWidget(
-                        units[i], landscape ? 11 : 14, colors().text_color),
+                        units[i], landscape ? 11 : 14, colors.text_color),
                   ),
                 ],
               )
@@ -137,7 +132,7 @@ class MonitorView extends GetView<MonitorController> {
     }
 
     return Scaffold(
-      backgroundColor: colors().backGround,
+      backgroundColor: colors.backGround,
       body: Padding(
         padding: landscape
             ? EdgeInsets.only(left: 10, right: 10, top: 0)
@@ -148,62 +143,6 @@ class MonitorView extends GetView<MonitorController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              landscape == false
-                  ? Align(
-                      alignment: landscape
-                          ? Alignment.bottomRight
-                          : Alignment.topRight,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Obx(() => controller.connected.value == false
-                              ? ElevatedButton(
-                                  onPressed: () {
-                                    if (controller.blueON == false) {
-                                      controller.enableBT();
-                                    } else if (controller.connected.value ==
-                                            false &&
-                                        controller.blueON == true) {
-                                      controller.startScan();
-                                    }
-                                  },
-                                  child: Text(
-                                    'Connect',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
-                                    backgroundColor: colors.green,
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: 0,
-                                )),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                controller.logout();
-                              },
-                              child: Icon(Icons.login_outlined,
-                                  color: Colors.white),
-                              style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(),
-                                padding: EdgeInsets.all(10),
-                                backgroundColor: Color.fromARGB(
-                                    255, 233, 210, 7), // <-- Button color
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Text(''),
               Flexible(flex: 0, child: Obx(() => containerWidget())),
               Flexible(
                 flex: 1,
@@ -224,7 +163,7 @@ class MonitorView extends GetView<MonitorController> {
                                           1.25 /
                                           100,
                           progressHeadType: GFProgressHeadType.circular,
-                          radius: landscape ? Get.height - 75 : Get.width - 50,
+                          radius: landscape ? Get.height - 75 : Get.width - 60,
                           circleWidth: 11,
                           type: GFProgressType.circular,
                           backgroundColor: Colors.grey,
@@ -234,94 +173,94 @@ class MonitorView extends GetView<MonitorController> {
                                   : colors.green,
                         ),
                       )),
-                  Image.asset(
-                    'assets/images/FulmineIcon-e.png',
-                    height: 220,
-                    width: 120,
-                    color: colors().grey,
-                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: landscape ? Get.width / 6 : Get.width / 3,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: landscape ? 60 : 20,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Stack(alignment: Alignment.center, children: [
-                                Obx(
-                                  () => RotatedBox(
-                                    quarterTurns: -1,
-                                    child: Container(
-                                      width: 58,
-                                      height: 37,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(20),
-                                            bottomRight: Radius.circular(20)),
-                                        child: LinearProgressIndicator(
-                                          value: controller
-                                                  .percentage_internal.value /
-                                              100,
-                                          valueColor: AlwaysStoppedAnimation<
-                                                  Color>(
-                                              Color.fromARGB(255, 16, 232, 27)),
-                                          backgroundColor: colors().backGround,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Image.asset(
-                                  'assets/images/battery-charging.png',
-                                  width: 60,
-                                  color: colors().text_color,
-                                ),
-                              ]),
-                              Obx(() => Padding(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      '${controller.percentage_internal} %',
-                                      style: TextStyle(
-                                          fontFamily: 'BebasNeue',
-                                          fontSize: 23,
-                                          color: Colors.green),
-                                    ),
-                                  ))
-                            ],
-                          ),
-                        ),
+                        width: landscape ? Get.width / 6 : Get.width / 3 - 10,
                       ),
                       Container(
                         child: Obx(
                           () => SizedBox(
-                            width: landscape
-                                ? Get.width / 6 + 30
-                                : Get.width / 3 + 25,
+                            width:
+                                landscape ? Get.width / 6 : Get.width / 3 + 25,
                             child: Center(
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 15),
-                                child: Text(
-                                  controller.tier1 == true
-                                      ? '${controller.speedInternal.value}'
-                                      : controller.tier2 == true
-                                          ? '${controller.speedInternal.value}'
-                                          : controller.tier3 == true
-                                              ? '${controller.speedInternal.value}'
-                                              : '${controller.speedInternal.value}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w100,
-                                    fontFamily: 'BebasNeue',
-                                    fontSize:
-                                        controller.speedInternal.value >= 100
-                                            ? 110
-                                            : 170,
-                                    letterSpacing: -3,
-                                    color: colors().text_color,
-                                  ),
+                                child: Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: Text(
+                                        controller.tier1 == true
+                                            ? '${controller.speedInternal.value}'
+                                            : controller.tier2 == true
+                                                ? '${controller.speedInternal.value}'
+                                                : controller.tier3 == true
+                                                    ? '${controller.speedInternal.value}'
+                                                    : '${controller.speedInternal.value}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w100,
+                                          fontFamily: 'BebasNeue',
+                                          fontSize:
+                                              controller.speedInternal.value >=
+                                                      100
+                                                  ? 110
+                                                  : 170,
+                                          letterSpacing: -3,
+                                          color: colors.text_color,
+                                        ),
+                                      ),
+                                    ),
+                                    Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 80,
+                                          height: 35,
+                                          child: FittedBox(
+                                            fit: BoxFit.fill,
+                                            child: RotatedBox(
+                                              quarterTurns: 1,
+                                              child: Image.asset(
+                                                'assets/images/battery_internal.png',
+                                                width: 40,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Obx(() => Container(
+                                              padding:
+                                                  EdgeInsets.only(right: 0),
+                                              width: 70,
+                                              height: 26,
+                                              color: Colors.transparent,
+                                              child: LinearProgressIndicator(
+                                                  value: controller
+                                                          .percentage_internal
+                                                          .value /
+                                                      100,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                              Color>(
+                                                          Color.fromARGB(255,
+                                                              16, 232, 27)),
+                                                  backgroundColor:
+                                                      Colors.transparent),
+                                            )),
+                                        Obx(() => Text(
+                                              '${controller.percentage_internal}%',
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            )),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -330,18 +269,14 @@ class MonitorView extends GetView<MonitorController> {
                       ),
                       SizedBox(
                         width:
-                            landscape ? Get.width / 6 - 12 : Get.width / 3 - 25,
-                        child: SizedBox(
-                          height: 45,
-                          width: 55,
-                          child: Text(
-                            'Km/h',
-                            style: TextStyle(
-                              fontFamily: 'BebasNeue',
-                              letterSpacing: 0,
-                              fontSize: 30,
-                              color: colors().text_color,
-                            ),
+                            landscape ? Get.width / 6 - 20 : Get.width / 3 - 15,
+                        child: Text(
+                          'Km/h',
+                          style: TextStyle(
+                            fontFamily: 'BebasNeue',
+                            letterSpacing: 0,
+                            fontSize: 27,
+                            color: colors.text_color,
                           ),
                         ),
                       ),
@@ -354,29 +289,55 @@ class MonitorView extends GetView<MonitorController> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 0, right: 0),
                       child: Flex(
+                        crossAxisAlignment: landscape
+                            ? CrossAxisAlignment.center
+                            : CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         direction: landscape ? Axis.vertical : Axis.horizontal,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: InkWell(
-                              onTap: () {
-                                final Uri _url =
-                                    Uri.parse('https://retrokit.it/');
-                                launchUrl(_url);
-                              },
-                              child: Image.asset(
-                                'assets/images/retrokit_golden.png',
-                                width: 100,
-                                color: Color.fromARGB(
-                                  255,
-                                  242,
-                                  201,
-                                  25,
+                          landscape
+                              ? Obx(() => Text(
+                                    controller.driving_state == 0
+                                        ? 'OFF'
+                                        : controller.driving_state == 1
+                                            ? 'RUN'
+                                            : controller.driving_state == 2
+                                                ? 'READY'
+                                                : 'OFF',
+                                    style: TextStyle(
+                                        fontFamily: 'BebasNeue',
+                                        fontSize: 32,
+                                        color: controller.driving_state == 0
+                                            ? colors.text_color
+                                            : controller.driving_state == 1
+                                                ? Colors.yellow
+                                                : controller.driving_state == 2
+                                                    ? Colors.green
+                                                    : colors.text_color),
+                                  ))
+                              : Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: landscape ? 0 : 50,
+                                  ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      final Uri _url =
+                                          Uri.parse('https://retrokit.it/');
+                                      launchUrl(_url);
+                                    },
+                                    child: Image.asset(
+                                      'assets/images/retrokit_golden.png',
+                                      width: 100,
+                                      color: Color.fromARGB(
+                                        255,
+                                        242,
+                                        201,
+                                        25,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
                           Flex(
                             direction: Axis.vertical,
                             children: [
@@ -389,15 +350,15 @@ class MonitorView extends GetView<MonitorController> {
                                   border: Border.all(
                                       width: 2,
                                       color: controller.eco.value == true
-                                          ? colors().text_color
+                                          ? colors.text_color
                                           : Colors.transparent),
                                 ),
                                 child: Center(
-                                    child: textWidget(
-                                        'ECO', 25, colors().text_color)),
+                                    child: textWidget(landscape ? 'E' : 'ECO',
+                                        25, colors.text_color)),
                               ),
                               Container(
-                                width: 110,
+                                width: landscape ? 50 : 110,
                                 padding: EdgeInsets.only(
                                     top: 5, bottom: 5, left: 20, right: 20),
                                 decoration: BoxDecoration(
@@ -405,12 +366,12 @@ class MonitorView extends GetView<MonitorController> {
                                   border: Border.all(
                                       width: 2,
                                       color: controller.drive.value == true
-                                          ? colors().text_color
+                                          ? colors.text_color
                                           : Colors.transparent),
                                 ),
                                 child: Center(
-                                  child: textWidget(
-                                      'DRIVE', 25, colors().text_color),
+                                  child: textWidget(landscape ? 'D' : 'DRIVE',
+                                      25, colors.text_color),
                                 ),
                               ),
                               Container(
@@ -422,77 +383,63 @@ class MonitorView extends GetView<MonitorController> {
                                   border: Border.all(
                                       width: 2,
                                       color: controller.sport.value == true
-                                          ? colors().text_color
+                                          ? colors.text_color
                                           : Colors.transparent),
                                 ),
                                 child: Center(
-                                  child: textWidget(
-                                      'Sport', 25, colors().text_color),
+                                  child: textWidget(landscape ? 'S' : 'Sport',
+                                      25, colors.text_color),
                                 ),
                               ),
                             ],
                           ),
-                          landscape == true
-                              ? Row(
-                                  children: [
-                                    Align(
-                                      alignment: landscape
-                                          ? Alignment.bottomRight
-                                          : Alignment.topRight,
-                                      child: Obx(() => controller
-                                                  .connected.value ==
-                                              false
-                                          ? ElevatedButton(
-                                              onPressed: () {
-                                                if (controller.blueON ==
-                                                    false) {
-                                                  controller.enableBT();
-                                                } else if (controller
-                                                            .connected.value ==
-                                                        false &&
-                                                    controller.blueON == true) {
-                                                  controller.startScan();
-                                                }
-                                              },
-                                              child: Text(
-                                                'Connect',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14,
-                                                    decoration:
-                                                        TextDecoration.none),
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30)),
-                                                backgroundColor: colors.green,
-                                              ),
-                                            )
-                                          : SizedBox(
-                                              height: 0,
-                                            )),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        controller.logout();
-                                      },
-                                      child: Icon(Icons.login_outlined,
-                                          color: Colors.white),
-                                      style: ElevatedButton.styleFrom(
-                                        shape: CircleBorder(),
-                                        padding: EdgeInsets.all(10),
-                                        backgroundColor: Color.fromARGB(255,
-                                            233, 210, 7), // <-- Button color
+                          landscape
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: landscape ? 0 : 50,
+                                  ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      final Uri _url =
+                                          Uri.parse('https://retrokit.it/');
+                                      launchUrl(_url);
+                                    },
+                                    child: Image.asset(
+                                      'assets/images/retrokit_golden.png',
+                                      width: 100,
+                                      color: Color.fromARGB(
+                                        255,
+                                        242,
+                                        201,
+                                        25,
                                       ),
-                                    )
-                                  ],
+                                    ),
+                                  ),
                                 )
                               : SizedBox(
-                                  width: 100,
-                                ),
+                                  width: landscape ? 100 : Get.width / 3 - 50,
+                                  child: Obx(() => Text(
+                                        controller.driving_state == 0
+                                            ? 'OFF'
+                                            : controller.driving_state == 1
+                                                ? 'RUN'
+                                                : controller.driving_state == 2
+                                                    ? 'READY'
+                                                    : 'OFF',
+                                        style: TextStyle(
+                                            fontFamily: 'BebasNeue',
+                                            fontSize: 32,
+                                            color: controller.driving_state == 0
+                                                ? colors.text_color
+                                                : controller.driving_state == 1
+                                                    ? Colors.yellow
+                                                    : controller.driving_state ==
+                                                            2
+                                                        ? Colors.green
+                                                        : colors.text_color),
+                                      )),
+                                )
                         ],
                       ),
                     ),

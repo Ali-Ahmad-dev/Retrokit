@@ -36,9 +36,9 @@ class HomeView extends GetView<HomeController> {
             width: 40,
             child: BottomNavigationBar(
               elevation: 0,
-              backgroundColor: colors().backGround,
+              backgroundColor: colors.backGround,
               selectedItemColor: colors.green,
-              unselectedItemColor: colors().grey,
+              unselectedItemColor: colors.grey,
               currentIndex: controller.activePage.value,
               onTap: (index) {
                 controller.pageViewController.value.animateToPage(index,

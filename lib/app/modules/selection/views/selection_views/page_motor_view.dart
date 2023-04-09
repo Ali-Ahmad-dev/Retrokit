@@ -16,10 +16,10 @@ class PageMotorView extends StatelessWidget {
         MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Scaffold(
-      backgroundColor: colors().backGround,
+      backgroundColor: colors.backGround,
       appBar: AppBar(
         toolbarHeight: 35,
-        backgroundColor: colors().backGround,
+        backgroundColor: colors.backGround,
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -40,7 +40,7 @@ class PageMotorView extends StatelessWidget {
                         'assets/images/more2.png',
                         width: 130,
                         height: 70,
-                        color: colors().text_color,
+                        color: colors.text_color,
                       ),
                     ],
                   ),
@@ -64,7 +64,7 @@ class PageMotorView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         utility().body_selections_const(
-                            'revol. per minute', colors().dark_grey),
+                            'revol. per minute', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().speedInternal,
                             Get.find<MonitorController>().motor_rpm_max,
@@ -99,11 +99,7 @@ class PageMotorView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         utility().body_selections_const(
-                            'Odometer', colors().dark_grey),
-                        Obx(() => utility().maximum_value_container(
-                            Get.find<MonitorController>().motor_odo,
-                            Get.find<MonitorController>().motor_odo_max,
-                            'KM')),
+                            'Odometer', colors.dark_grey),
                       ],
                     ),
                     Padding(
@@ -134,11 +130,11 @@ class PageMotorView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         utility().body_selections_const(
-                            'Temprature', colors().dark_grey),
+                            'Temprature', colors.dark_grey),
                         Obx(() => utility().maximum_value_container(
                             Get.find<MonitorController>().motor_temprature,
                             Get.find<MonitorController>().motor_temprature_max,
-                            '°C')),
+                            '')),
                       ],
                     ),
                     Obx(() => Padding(
@@ -151,7 +147,7 @@ class PageMotorView extends StatelessWidget {
                                 splashColor: Colors.transparent,
                                 onTap: () {
                                   controller.wheel_selection(
-                                      true, false, false);
+                                      true, false, false, 1);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -173,7 +169,7 @@ class PageMotorView extends StatelessWidget {
                                 splashColor: Colors.transparent,
                                 onTap: () {
                                   controller.wheel_selection(
-                                      false, true, false);
+                                      false, true, false, 1);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -195,7 +191,7 @@ class PageMotorView extends StatelessWidget {
                                 splashColor: Colors.transparent,
                                 onTap: () {
                                   controller.wheel_selection(
-                                      false, false, true);
+                                      false, false, true, 1);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -227,7 +223,8 @@ class PageMotorView extends StatelessWidget {
                               splashFactory: NoSplash.splashFactory,
                               splashColor: Colors.transparent,
                               onTap: () {
-                                controller.gear_selection(true, false, false);
+                                controller.gear_selection(
+                                    true, false, false, 0);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(3),
@@ -271,7 +268,8 @@ class PageMotorView extends StatelessWidget {
                               splashFactory: NoSplash.splashFactory,
                               splashColor: Colors.transparent,
                               onTap: () {
-                                controller.gear_selection(false, true, false);
+                                controller.gear_selection(
+                                    false, true, false, 1);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(3),
@@ -315,7 +313,8 @@ class PageMotorView extends StatelessWidget {
                               splashFactory: NoSplash.splashFactory,
                               splashColor: Colors.transparent,
                               onTap: () {
-                                controller.gear_selection(false, false, true);
+                                controller.gear_selection(
+                                    false, false, true, 2);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(3),
