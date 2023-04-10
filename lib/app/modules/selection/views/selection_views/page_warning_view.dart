@@ -160,9 +160,29 @@ class PageWarningView extends StatelessWidget {
 
   RxList<Map> non_warnings_data = [
     {
-      'value': Get.find<MonitorController>().bms_temprature_sensor_error,
-      'title': 'BMS Temperature Sensor Error',
-      'code': 'P0023',
+      'value': Get.find<MonitorController>().bms_status,
+      'title': 'VCU STATUS',
+      'code': 'P0024',
+    },
+    {
+      'value': Get.find<MonitorController>().bms_status,
+      'title': 'BMS STATUS',
+      'code': 'P0025',
+    },
+    {
+      'value': Get.find<MonitorController>().bms_discharging,
+      'title': 'BMS DISCHARGING',
+      'code': 'P0026',
+    },
+    {
+      'value': Get.find<MonitorController>().bms_charging,
+      'title': 'BMS CHARGING',
+      'code': 'P0027',
+    },
+    {
+      'value': Get.find<MonitorController>().bms_charge_comleted,
+      'title': 'BMS CHARGE COMPLETED',
+      'code': 'P0028',
     },
   ].obs;
 
@@ -210,11 +230,62 @@ class PageWarningView extends StatelessWidget {
     warnings_data.sort((a, b) => b['value'].value.compareTo(a['value'].value));
   }
 
+  status_color(title, RxInt int, code) {
+    return SizedBox(
+      width: Get.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: Get.width / 2 + 10,
+            child: Text(
+              title,
+              style: TextStyle(
+                letterSpacing: 1.0,
+                fontSize: 20,
+                fontFamily: 'BebasNeue',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: Get.width / 2 - 30,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(code,
+                    style: TextStyle(
+                        letterSpacing: 1.0,
+                        fontFamily: 'BebasNeue',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                Obx(
+                  () => Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                        color: int.value == 0
+                            ? Colors.white
+                            : int.value == 1
+                                ? Colors.yellow
+                                : int.value == 2
+                                    ? Colors.red
+                                    : Colors.transparent,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final landscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 35,
@@ -242,7 +313,16 @@ class PageWarningView extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 550,
+                height: 150,
+                child: ListView.builder(
+                    itemCount: non_warnings_data.length,
+                    itemBuilder: ((context, index) => Obx(() => status_color(
+                        non_warnings_data[index]['title'],
+                        non_warnings_data[index]['value'],
+                        non_warnings_data[index]['code'])))),
+              ),
+              SizedBox(
+                height: 650,
                 child: ListView.builder(
                     itemCount: warnings_data.length,
                     itemBuilder: (context, index) {

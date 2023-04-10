@@ -191,7 +191,6 @@ class PageControllerView extends StatelessWidget {
                             '')),
                       ],
                     ),
-                    //if the domain is not working with the fiilte project and the amount was not there and still is able
                     Padding(
                       padding: EdgeInsets.only(
                           top: landscape ? 0 : 15, bottom: landscape ? 0 : 15),
@@ -221,6 +220,40 @@ class PageControllerView extends StatelessWidget {
                       children: [
                         utility()
                             .body_selections_const('Mapping', colors.dark_grey),
+                        Obx(() => Container(
+                            width: 130,
+                            padding: EdgeInsets.only(
+                                top: 10, bottom: 10, right: 15, left: 15),
+                            decoration: BoxDecoration(
+                              color: colors.red,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                  Get.find<MonitorController>()
+                                              .driving_mode
+                                              .value ==
+                                          0
+                                      ? 'ECO'
+                                      : Get.find<MonitorController>()
+                                                  .driving_mode
+                                                  .value ==
+                                              1
+                                          ? 'Driving'
+                                          : Get.find<MonitorController>()
+                                                      .driving_mode
+                                                      .value ==
+                                                  2
+                                              ? 'ECO'
+                                              : '',
+                                  style: TextStyle(
+                                      letterSpacing: 0.0,
+                                      fontSize: 19,
+                                      fontFamily: 'BebasNeue',
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            ))),
                       ],
                     ),
                   ],

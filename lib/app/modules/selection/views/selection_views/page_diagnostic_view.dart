@@ -1,11 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:retrokit/app/helper/utility.dart';
-import 'package:retrokit/app/modules/monitor/controllers/monitor_controller.dart';
 import 'package:retrokit/app/modules/selection/controllers/diagnosticController.dart';
-
 import '../../../../../styles/colors.dart';
 
 class PageDiagnosticView extends StatelessWidget {
@@ -50,7 +46,7 @@ class PageDiagnosticView extends StatelessWidget {
                         height: 30,
                       ),
                       Container(
-                          height: Get.height - 50,
+                          height: Get.height - 140,
                           padding: EdgeInsets.only(right: 10),
                           child: Obx(() => LineChart(
                                 LineChartData(
