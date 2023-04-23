@@ -160,7 +160,7 @@ class PageWarningView extends StatelessWidget {
 
   RxList<Map> non_warnings_data = [
     {
-      'value': Get.find<MonitorController>().bms_status,
+      'value': Get.find<MonitorController>().vcu_status,
       'title': 'VCU STATUS',
       'code': 'P0024',
     },
@@ -322,7 +322,7 @@ class PageWarningView extends StatelessWidget {
                         non_warnings_data[index]['code'])))),
               ),
               SizedBox(
-                height: 650,
+                height: Get.height / 2,
                 child: ListView.builder(
                     itemCount: warnings_data.length,
                     itemBuilder: (context, index) {

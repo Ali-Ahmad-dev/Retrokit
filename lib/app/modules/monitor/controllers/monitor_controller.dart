@@ -617,6 +617,7 @@ class MonitorController extends GetxController {
 
   void onReceived_throttle_fault(List<int> data) {
     int x = int.parse("${String.fromCharCodes(data)}");
+    print(x);
     if (x == 1) {
       throttle_fault_state.value = true;
     }
@@ -758,6 +759,7 @@ class MonitorController extends GetxController {
 
   void onReceived_bms_charging(List<int> data) {
     int x = int.parse("${String.fromCharCodes(data)}");
+
     bms_charging.value = x;
   }
 
